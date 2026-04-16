@@ -1,3 +1,4 @@
+console.log("🔥 NEW SQLITE SERVER RUNNING");
 const express = require("express");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
@@ -56,165 +57,58 @@ async function initializeDatabase() {
 // ─── AUTH ─────────────────────────────────────────────────────────────────
 app.post("/api/register", (req, res) => {
   console.log("[REGISTER] Request received");
-  console.log("[REGISTER] Body:", req.body);
 
-  try {
-    const { name, username, password, course, yearLevel } = req.body;
+  const { name, username, password, course, department, yearLevel } = req.body;
 
-    // ✅ VALIDATION
-    if (!name || !username || !password) {
-      console.log("[REGISTER] Missing required fields");
-      return res.status(400).json({
-        error: "Name, username, and password are required",
-      });
-    }
-
-    if (username.length < 3) {
-      return res.status(400).json({
-        error: "Username must be at least 3 characters",
-      });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({
-        error: "Password must be at least 6 characters",
-      });
-    }
-
-    console.log("[REGISTER] Processing:", { name, username });
-
-    // ✅ CHECK IF USERNAME ALREADY EXISTS
-    db.get(
-      `SELECT id FROM Users WHERE username = ?`,
-      [username],
-      (err, existingUser) => {
-        if (err) {
-          console.error("[REGISTER] Database error (check existing):", err);
-          return res.status(500).json({
-            error: "Database error",
-            message: err.message,
-          });
-        }
-
-        if (existingUser) {
-          console.log("[REGISTER] Username already exists:", username);
-          return res.status(400).json({
-            error: "Username already taken",
-          });
-        }
-
-        // ✅ INSERT NEW USER
-        console.log("[REGISTER] Creating user...");
-        db.run(
-          `INSERT INTO Users (name, username, password, course, department, yearLevel)
-           VALUES (?, ?, ?, ?, ?, ?)`,
-          [
-            name,
-            username,
-            password,
-            course || "",
-            course || "",
-            yearLevel || "",
-          ],
-          function (err) {
-            if (err) {
-              console.error("[REGISTER] Insert error:", err);
-              return res.status(500).json({
-                error: "Registration failed",
-                message: err.message,
-              });
-            }
-
-            console.log(
-              "[REGISTER] Success - User created with ID:",
-              this.lastID,
-            );
-            res.status(201).json({
-              success: true,
-              message: "Registration successful",
-              userId: this.lastID,
-              user: {
-                id: this.lastID,
-                name,
-                username,
-                course: course || "",
-                yearLevel: yearLevel || "",
-              },
-            });
-          },
-        );
-      },
-    );
-  } catch (error) {
-    console.error("[REGISTER] ERROR:", error.message);
-    console.error("[REGISTER] Stack:", error.stack);
-
-    res.status(500).json({
-      error: "Registration failed",
-      message: error.message,
-    });
-  }
-});
-
-app.post("/api/login", (req, res) => {
-  console.log("[LOGIN] Request received");
-  const { username, password } = req.body;
-
-  console.log("[LOGIN] Attempting login for:", username);
-
-  if (!username || !password) {
-    console.log("[LOGIN] Missing username or password");
-    return res.status(400).json({
-      success: false,
-      message: "Username and password required",
-    });
+  // 1. Validation
+  if (!name || !username || !password) {
+    return res
+      .status(400)
+      .json({ error: "Name, username, and password are required" });
   }
 
+  // 2. Check if username exists
   db.get(
-    `SELECT * FROM Users WHERE username = ? AND password = ?`,
-    [username, password],
-    (err, user) => {
-      if (err) {
-        console.error("[LOGIN] Database error:", err);
-        return res.status(500).json({
-          success: false,
-          message: "Database error",
-        });
-      }
+    `SELECT id FROM Users WHERE username = ?`,
+    [username],
+    (err, existingUser) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ error: "Database error", message: err.message });
+      if (existingUser)
+        return res.status(400).json({ error: "Username already taken" });
 
-      if (!user) {
-        console.log("[LOGIN] Invalid credentials for:", username);
-        return res.status(401).json({
-          success: false,
-          message: "Invalid username or password",
-        });
-      }
+      // 3. INSERT logic with your new constants
+      const dept = department || course || "";
+      const crs = course || "";
 
-      console.log("[LOGIN] Success for:", username);
-      res.status(200).json({
-        success: true,
-        user: {
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          bio: user.bio || "",
-          course: user.course || "",
-          department: user.department || "",
-          yearLevel: user.yearLevel || "",
+      db.run(
+        `INSERT INTO Users (name, username, password, course, department, yearLevel)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+        [name, username, password, crs, dept, yearLevel || ""],
+        function (err) {
+          if (err) {
+            console.error("[REGISTER] Insert error:", err);
+            return res
+              .status(500)
+              .json({ error: "Registration failed", message: err.message });
+          }
+
+          console.log("[REGISTER] Success - User created ID:", this.lastID);
+          res.status(201).json({
+            success: true,
+            userId: this.lastID,
+            user: {
+              id: this.lastID,
+              name,
+              username,
+              course: crs,
+              yearLevel: yearLevel || "",
+            },
+          });
         },
-      });
-    },
-  );
-});
-
-// ─── USERS ────────────────────────────────────────────────────────────────
-app.get("/api/users", (req, res) => {
-  db.all(
-    `SELECT id, name, username, bio, course, department, yearLevel FROM Users`,
-    [],
-    (err, users) => {
-      if (err) return res.json({ success: false, message: err.message });
-      res.json({ success: true, users });
+      );
     },
   );
 });
