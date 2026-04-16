@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SWAPPR — My Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: "class" };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+      /* ── Page surfaces ───────────────────────────────────────────────────── */
+      .page-bg {
+        background: #f3f2ee;
+      }
+      .dark .page-bg {
+        background: #0c0a18;
+      }
+
+      .card {
+        background: white;
+        border-radius: 10px;
+        border: 1px solid #e5e0f0;
+        overflow: hidden;
+      }
+      .dark .card {
+        background: #110e20;
+        border-color: rgba(255, 255, 255, 0.06);
+      }
+
+      /* ── Cover banner ────────────────────────────────────────────────────── */
+      .cover {
+        height: 200px;
+        background: linear-gradient(
+          135deg,
+          #4a0080 0%,
+          #5b5bd6 55%,
+          #9b8ec4 100%
+        );
+        position: relative;
+      }
+      .dark .cover {
+        background: linear-gradient(
+          135deg,
+          #2a0858 0%,
+          #383478 60%,
+          #1e1535 100%
+        );
+      }
+
+      /* ── Avatar ──────────────────────────────────────────────────────────── */
+      .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4a0080, #5b5bd6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: white;
+        border: 4px solid white;
+        box-shadow: 0 2px 12px rgba(74, 0, 128, 0.25);
+        position: absolute;
+        bottom: -48px;
+        left: 24px;
+        flex-shrink: 0;
+      }
+      .dark .avatar {
+        border-color: #110e20;
+      }
+
+      /* ── Identity block ──────────────────────────────────────────────────── */
+      .identity {
+        padding: 64px 24px 20px;
+      }
+
+      .profile-name {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #1e1033;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .dark .profile-name {
+        color: #f0eaff;
+      }
+
+      .profile-tagline {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #4a3d6b;
+        margin-top: 2px;
+      }
+      .dark .profile-tagline {
+        color: #b8aee8;
+      }
+
+      .profile-meta {
+        font-size: 0.8rem;
+        color: #7a6e90;
+        margin-top: 4px;
+      }
+      .dark .profile-meta {
+        color: #8878b8;
+      }
+
+      .profile-stats {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #4a0080;
+        margin-top: 6px;
+      }
+      .dark .profile-stats {
+        color: #a090c8;
+      }
+      .profile-stats span {
+        margin-right: 12px;
+      }
+
+      /* ── Action buttons ──────────────────────────────────────────────────── */
+      .btn-action {
+        padding: 6px 18px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: "Montserrat", sans-serif;
+        cursor: pointer;
+        transition:
+          opacity 0.2s,
+          transform 0.15s;
+        border: 1.5px solid transparent;
+      }
+      .btn-action-primary {
+        background: linear-gradient(135deg, #4a0080, #7b2fbe);
+        color: white;
+        box-shadow: 0 2px 8px rgba(74, 0, 128, 0.25);
+      }
+      .btn-action-primary:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+      .btn-action-outline {
+        background: transparent;
+        border-color: #7b2fbe;
+        color: #7b2fbe;
+      }
+      .dark .btn-action-outline {
+        border-color: #9b8ec4;
+        color: #c4baf0;
+      }
+      .btn-action-outline:hover {
+        background: rgba(123, 47, 190, 0.07);
+      }
+
+      /* ── Section cards ───────────────────────────────────────────────────── */
+      .section-body {
+        padding: 20px 24px 24px;
+      }
+
+      .section-heading {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #1e1033;
+        margin-bottom: 14px;
+      }
+      .dark .section-heading {
+        color: #f0eaff;
+      }
+
+      /* ── About ───────────────────────────────────────────────────────────── */
+      .about-text {
+        font-size: 0.875rem;
+        line-height: 1.75;
+        color: #3d3550;
+        white-space: pre-wrap;
+      }
+      .dark .about-text {
+        color: #c0b8d8;
+      }
+
+      /* ── Top skills strip ────────────────────────────────────────────────── */
+      .top-skills-strip {
+        margin-top: 16px;
+        padding: 14px 16px;
+        background: #faf5ff;
+        border-radius: 10px;
+        border: 1px solid #ede9fe;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: background 0.15s;
+        text-decoration: none;
+      }
+      .dark .top-skills-strip {
+        background: rgba(108, 96, 184, 0.08);
+        border-color: rgba(108, 96, 184, 0.18);
+      }
+      .top-skills-strip:hover {
+        background: #f3e8ff;
+      }
+      .dark .top-skills-strip:hover {
+        background: rgba(108, 96, 184, 0.15);
+      }
+      .top-skills-text {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #4a0080;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .dark .top-skills-text {
+        color: #b8aee8;
+      }
+
+      /* ── Skills grid ─────────────────────────────────────────────────────── */
+      .skills-group-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 10px;
+      }
+      .skill-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 13px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        font-family: "Montserrat", sans-serif;
+        margin: 0 4px 6px 0;
+      }
+      .pill-strength {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .dark .pill-strength {
+        background: rgba(22, 101, 52, 0.22);
+        color: #86efac;
+      }
+      .pill-weakness {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .dark .pill-weakness {
+        background: rgba(153, 27, 27, 0.22);
+        color: #fca5a5;
+      }
+
+      /* ── Notebook card ───────────────────────────────────────────────────── */
+      .notebook-item {
+        padding: 16px;
+        border-radius: 10px;
+        border: 1px solid #ede9fe;
+        background: #faf5ff;
+        transition:
+          box-shadow 0.2s,
+          transform 0.15s;
+      }
+      .dark .notebook-item {
+        background: #181428;
+        border-color: rgba(255, 255, 255, 0.06);
+      }
+      .notebook-item:hover {
+        box-shadow: 0 4px 16px rgba(74, 0, 128, 0.1);
+        transform: translateY(-1px);
+      }
+      .notebook-title {
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: #1e1033;
+      }
+      .dark .notebook-title {
+        color: #f0eaff;
+      }
+      .notebook-dept {
+        font-size: 0.75rem;
+        color: #8878b8;
+        margin-top: 2px;
+      }
+
+      /* ── Match pill ──────────────────────────────────────────────────────── */
+      .match-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #ede9fe;
+        background: white;
+        text-decoration: none;
+        transition: background 0.15s;
+      }
+      .dark .match-pill {
+        background: #181428;
+        border-color: rgba(255, 255, 255, 0.06);
+      }
+      .match-pill:hover {
+        background: #faf5ff;
+      }
+      .dark .match-pill:hover {
+        background: rgba(108, 96, 184, 0.1);
+      }
+      .match-avatar-sm {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4a0080, #7b2fbe);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      /* ── Own badge ───────────────────────────────────────────────────────── */
+      .own-badge {
+        font-size: 0.62rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(74, 0, 128, 0.1);
+        color: #4a0080;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .dark .own-badge {
+        background: rgba(155, 142, 196, 0.15);
+        color: #9b8ec4;
+      }
+
+      /* ── Divider ─────────────────────────────────────────────────────────── */
+      .divider {
+        height: 1px;
+        background: #ede9fe;
+        margin: 16px 0;
+      }
+      .dark .divider {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      /* ── Empty state ─────────────────────────────────────────────────────── */
+      .empty-state {
+        font-size: 0.85rem;
+        color: #9b8ec4;
+        font-style: italic;
+        padding: 8px 0;
+      }
+    </style>
+  </head>
+
+  <body class="page-bg font-sans min-h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header
+      class="px-6 py-4 flex items-center justify-between bg-white dark:bg-[#110e20] border-b border-purple-100 dark:border-white/[0.06] sticky top-0 z-40 shadow-sm transition-colors duration-300"
+    >
+      <button
+        onclick="goHome()"
+        class="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0 hover:opacity-75 transition-opacity"
+      >
+        <span class="text-2xl">⇄</span>
+        <h1
+          class="text-2xl font-extrabold tracking-tight text-purple-800 dark:text-purple-300"
+          style="
+            text-shadow:
+              0 0 8px rgba(167, 139, 250, 0.8),
+              0 0 20px rgba(124, 58, 237, 0.5);
+          "
+        >
+          SWAPPR
+        </h1>
+      </button>
+      <div class="flex items-center gap-3">
+        <button
+          id="themeToggle"
+          class="w-8 h-8 rounded-full flex items-center justify-center text-sm border bg-[#faf5ff] dark:bg-[#181428] border-[#ddd6fe] dark:border-white/[0.06] transition"
+        >
+          🌙
+        </button>
+        <button
+          onclick="handleLogout()"
+          class="text-xs font-bold px-3 py-1.5 rounded-full border transition text-purple-700 dark:text-purple-300 border-purple-200 dark:border-white/[0.1] hover:bg-purple-50 dark:hover:bg-white/[0.05]"
+        >
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="max-w-2xl mx-auto px-4 py-6 space-y-3">
+      <!-- ── Hero card ─────────────────────────────────────────────────────── -->
+      <div class="card">
+        <!-- Cover -->
+        <div class="cover" style="position: relative">
+          <div class="avatar" id="avatarEl"></div>
+        </div>
+
+        <!-- Identity -->
+        <div class="identity">
+          <div class="flex items-start justify-between gap-3 flex-wrap">
+            <div class="flex-1 min-w-0">
+              <div class="profile-name">
+                <span id="profileNameEl">—</span>
+                <span class="own-badge" id="ownBadge" style="display: none"
+                  >You</span
+                >
+              </div>
+              <p class="profile-tagline" id="profileTaglineEl">—</p>
+              <p class="profile-meta" id="profileMetaEl">—</p>
+              <p class="profile-stats" id="profileStatsEl"></p>
+            </div>
+            <!-- Action buttons -->
+            <div class="flex gap-2 shrink-0 pt-1" id="profileActions"></div>
+          </div>
+
+          <!-- Top skills strip (quick preview) -->
+          <div
+            class="top-skills-strip"
+            id="topSkillsStrip"
+            onclick="
+              document
+                .getElementById('skillsSection')
+                .scrollIntoView({ behavior: 'smooth' })
+            "
+          >
+            <span style="font-size: 1rem">💎</span>
+            <span class="top-skills-text" id="topSkillsPreview"
+              >Loading skills...</span
+            >
+            <span style="color: #9b8ec4; font-size: 0.8rem">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── About ─────────────────────────────────────────────────────────── -->
+      <div class="card" id="aboutCard">
+        <div class="section-body">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="section-heading" style="margin-bottom: 0">About</h2>
+            <button
+              id="editBioBtn"
+              class="text-xs font-bold text-purple-400 hover:text-purple-600 transition hidden"
+              onclick="openEditModal()"
+            >
+              ✏️ Edit
+            </button>
+          </div>
+          <p class="about-text" id="bioText">—</p>
+        </div>
+      </div>
+
+      <!-- ── Skills ────────────────────────────────────────────────────────── -->
+      <div class="card" id="skillsSection">
+        <div class="section-body">
+          <h2 class="section-heading">Skills</h2>
+
+          <div class="mb-5">
+            <p class="skills-group-label text-green-700 dark:text-green-400">
+              Strengths
+            </p>
+            <div id="strengthsList"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <p class="skills-group-label text-red-600 dark:text-red-400">
+              Wants to Learn
+            </p>
+            <div id="weaknessesList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Notebooks ──────────────────────────────────────────────────────── -->
+      <div class="card">
+        <div class="section-body">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="section-heading" style="margin-bottom: 0">Notebooks</h2>
+            <button
+              id="addNotebookBtn"
+              class="btn-action btn-action-primary hidden"
+              onclick="window.location.href = 'index.html'"
+            >
+              + Add Notebook
+            </button>
+          </div>
+          <div id="notebooksList" class="space-y-3"></div>
+          <p id="noNotebooks" class="empty-state hidden">No notebooks yet.</p>
+        </div>
+      </div>
+
+      <!-- ── Connections ────────────────────────────────────────────────────── -->
+      <div class="card">
+        <div class="section-body">
+          <h2 class="section-heading">
+            Connections
+            <span
+              id="matchCount"
+              class="text-sm font-semibold text-purple-400 ml-2"
+            ></span>
+          </h2>
+          <div
+            id="matchesList"
+            class="grid grid-cols-1 sm:grid-cols-2 gap-3"
+          ></div>
+          <p id="noMatches" class="empty-state hidden">No SWAPP matches yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Edit Profile Modal ─────────────────────────────────────────────── -->
+    <div id="editModal" class="modal-overlay" onclick="closeEditModal(event)">
+      <div class="modal-box">
+        <h3
+          class="text-lg font-extrabold mb-5 text-purple-900 dark:text-purple-100"
+        >
+          Edit Profile
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <label class="field-section-label">Display Name</label>
+            <input
+              type="text"
+              id="editName"
+              class="input-field"
+              placeholder="Your full name"
+            />
+          </div>
+          <div>
+            <label class="field-section-label">Course / Program</label>
+            <select id="editCourse" class="input-field">
+              <option value="">Select your course</option>
+              <option value="BS Accountancy">BS Accountancy</option>
+              <option value="BS Architecture">BS Architecture</option>
+              <option value="BS Biology">BS Biology</option>
+              <option value="BS Business Administration">
+                BS Business Administration
+              </option>
+              <option value="BS Chemical Engineering">
+                BS Chemical Engineering
+              </option>
+              <option value="BS Chemistry">BS Chemistry</option>
+              <option value="BS Civil Engineering">BS Civil Engineering</option>
+              <option value="BS Communication">BS Communication</option>
+              <option value="BS Computer Engineering">
+                BS Computer Engineering
+              </option>
+              <option value="BS Computer Science">BS Computer Science</option>
+              <option value="BS Economics">BS Economics</option>
+              <option value="BS Electrical Engineering">
+                BS Electrical Engineering
+              </option>
+              <option value="BS Electronics Engineering">
+                BS Electronics Engineering
+              </option>
+              <option value="BS Fine Arts">BS Fine Arts</option>
+              <option value="BS Hospitality Management">
+                BS Hospitality Management
+              </option>
+              <option value="BS Industrial Engineering">
+                BS Industrial Engineering
+              </option>
+              <option value="BS Information Technology">
+                BS Information Technology
+              </option>
+              <option value="BS Mathematics">BS Mathematics</option>
+              <option value="BS Mechanical Engineering">
+                BS Mechanical Engineering
+              </option>
+              <option value="BS Nursing">BS Nursing</option>
+              <option value="BS Nutrition and Dietetics">
+                BS Nutrition and Dietetics
+              </option>
+              <option value="BS Pharmacy">BS Pharmacy</option>
+              <option value="BS Physics">BS Physics</option>
+              <option value="BS Political Science">BS Political Science</option>
+              <option value="BS Psychology">BS Psychology</option>
+              <option value="AB Anthropology">AB Anthropology</option>
+              <option value="AB History">AB History</option>
+              <option value="AB Literature">AB Literature</option>
+              <option value="AB Philosophy">AB Philosophy</option>
+              <option value="AB Sociology">AB Sociology</option>
+              <option value="JD Law">JD Law</option>
+              <option value="Bachelor of Secondary Education">
+                Bachelor of Secondary Education
+              </option>
+              <option value="Bachelor of Elementary Education">
+                Bachelor of Elementary Education
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="field-section-label">Bio</label>
+            <textarea
+              id="editBio"
+              class="input-field"
+              rows="4"
+              placeholder="Tell others what you're studying, your goals, what you love learning..."
+            ></textarea>
+          </div>
+          <div>
+            <label class="field-section-label">Department</label>
+            <select id="editDept" class="input-field">
+              <option value="">Select department</option>
+              <option value="Accountancy">Accountancy</option>
+              <option value="Anthropology, Sociology, and History">
+                Anthropology, Sociology, and History
+              </option>
+              <option value="Architecture">Architecture</option>
+              <option value="Biology">Biology</option>
+              <option value="Business Administration">
+                Business Administration
+              </option>
+              <option value="Chemical Engineering">Chemical Engineering</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Civil Engineering">Civil Engineering</option>
+              <option value="Communications, Linguistics, and Literature">
+                Communications, Linguistics, and Literature
+              </option>
+              <option value="Computer Engineering">Computer Engineering</option>
+              <option value="Computer, Information Sciences, and Mathematics">
+                Computer, Information Sciences, and Mathematics
+              </option>
+              <option value="Economics">Economics</option>
+              <option value="Electrical and Electronics Engineering">
+                Electrical and Electronics Engineering
+              </option>
+              <option value="Fine Arts">Fine Arts</option>
+              <option value="General Education and Mission">
+                General Education and Mission
+              </option>
+              <option value="Hospitality Management">
+                Hospitality Management
+              </option>
+              <option value="Industrial Engineering">
+                Industrial Engineering
+              </option>
+              <option value="Law">Law</option>
+              <option value="Mechanical and Manufacturing Engineering">
+                Mechanical and Manufacturing Engineering
+              </option>
+              <option value="Nursing">Nursing</option>
+              <option value="Nutrition and Dietetics">
+                Nutrition and Dietetics
+              </option>
+              <option value="Pharmacy">Pharmacy</option>
+              <option value="Philosophy">Philosophy</option>
+              <option value="Physics">Physics</option>
+              <option value="Political Science">Political Science</option>
+              <option value="Psychology">Psychology</option>
+              <option value="Teacher Education">Teacher Education</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-section-label">Year Level</label>
+            <select id="editYear" class="input-field">
+              <option value="">Select year level</option>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+              <option value="5th Year">5th Year</option>
+              <option value="Graduate">Graduate</option>
+            </select>
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button
+              onclick="closeEditModal()"
+              class="text-sm font-semibold text-purple-300 hover:text-purple-600 transition"
+            >
+              Cancel
+            </button>
+            <button onclick="saveProfile()" class="btn-primary">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      // ── Theme ────────────────────────────────────────────────────────────────
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") document.documentElement.classList.add("dark");
+      const themeToggle = document.getElementById("themeToggle");
+      themeToggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+      themeToggle.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+        const isDark = document.documentElement.classList.contains("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        themeToggle.textContent = isDark ? "☀️" : "🌙";
+      });
+
+      // ── Auth ─────────────────────────────────────────────────────────────────
+      let currentUser = null;
+      try {
+        const _stored = sessionStorage.getItem("currentUser");
+        if (!_stored || _stored === "undefined" || _stored === "null")
+          throw new Error();
+        currentUser = JSON.parse(_stored);
+        if (!currentUser || !currentUser.username) throw new Error();
+      } catch {
+        sessionStorage.removeItem("currentUser");
+        window.location.href = "login.html";
+      }
+
+      function handleLogout() {
+        sessionStorage.removeItem("currentUser");
+        window.location.href = "login.html";
+      }
+      function goHome() {
+        window.location.href = "index.html";
+      }
+
+      // ── Toast ─────────────────────────────────────────────────────────────────
+      function showToast(msg, type = "") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = `toast ${type} show`;
+        setTimeout(() => t.classList.remove("show"), 2800);
+      }
+
+      // ── Whose profile? ────────────────────────────────────────────────────────
+      const params = new URLSearchParams(window.location.search);
+      const viewUser = params.get("user") || currentUser.username;
+      const isOwn = viewUser === currentUser.username;
+
+      // ── Load ──────────────────────────────────────────────────────────────────
+      let profileData = null;
+
+      async function loadProfile() {
+        try {
+          const res = await fetch(`/api/profile/${viewUser}`);
+          const data = await res.json();
+          if (!data.success) {
+            showToast("Profile not found.", "red");
+            return;
+          }
+          profileData = data.profile;
+          renderProfile(profileData);
+        } catch {
+          showToast("Failed to load profile.", "red");
+        }
+      }
+
+      function renderProfile(p) {
+        // Avatar initials
+        const initials = p.name
+          ? p.name
+              .split(" ")
+              .map((w) => w[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : p.username.slice(0, 2).toUpperCase();
+        document.getElementById("avatarEl").textContent = initials;
+        document.title = `SWAPPR — ${p.name || p.username}`;
+
+        // Name + tagline
+        document.getElementById("profileNameEl").textContent =
+          p.name || p.username;
+        const taglineParts = [p.course, p.yearLevel].filter(Boolean);
+        document.getElementById("profileTaglineEl").textContent =
+          taglineParts.join(" · ") || "No course set";
+        const metaParts = [`@${p.username}`];
+        if (p.studentId) metaParts.push(`ID: ${p.studentId}`);
+        if (p.department) metaParts.push(p.department);
+        document.getElementById("profileMetaEl").textContent =
+          metaParts.join(" · ");
+
+        // Stats
+        document.getElementById("profileStatsEl").innerHTML =
+          `<span>${p.portfolios.length} Notebook${p.portfolios.length !== 1 ? "s" : ""}</span>` +
+          `<span>${p.matches.length} SWAPP Connection${p.matches.length !== 1 ? "s" : ""}</span>`;
+
+        // Top skills preview strip
+        const allStrengths = [
+          ...new Set(
+            p.portfolios.flatMap((n) => n.strengths || n.topics || []),
+          ),
+        ];
+        document.getElementById("topSkillsPreview").textContent =
+          allStrengths.length
+            ? allStrengths.slice(0, 5).join(" · ")
+            : "No skills listed yet";
+
+        // Bio
+        document.getElementById("bioText").textContent =
+          p.bio ||
+          (isOwn
+            ? "Add a bio to tell others about yourself..."
+            : "No bio yet.");
+
+        // Own controls
+        if (isOwn) {
+          document.getElementById("ownBadge").style.display = "inline-flex";
+          document.getElementById("editBioBtn").classList.remove("hidden");
+          document.getElementById("addNotebookBtn").classList.remove("hidden");
+          document.getElementById("profileActions").innerHTML = `
+            <button onclick="openEditModal()" class="btn-action btn-action-primary">✏️ Edit Profile</button>`;
+        } else {
+          document.getElementById("profileActions").innerHTML = `
+            <button onclick="goHome()" class="btn-action btn-action-outline">← Back</button>`;
+        }
+
+        // Skills
+        const allWeaknesses = [
+          ...new Set(p.portfolios.flatMap((n) => n.weaknesses || [])),
+        ];
+
+        document.getElementById("strengthsList").innerHTML = allStrengths.length
+          ? allStrengths
+              .map((s) => `<span class="skill-pill pill-strength">${s}</span>`)
+              .join("")
+          : `<p class="empty-state">No strengths listed yet.</p>`;
+
+        document.getElementById("weaknessesList").innerHTML =
+          allWeaknesses.length
+            ? allWeaknesses
+                .map(
+                  (w) => `<span class="skill-pill pill-weakness">${w}</span>`,
+                )
+                .join("")
+            : `<p class="empty-state">No learning goals listed yet.</p>`;
+
+        // Notebooks
+        const notebooksList = document.getElementById("notebooksList");
+        const noNotebooks = document.getElementById("noNotebooks");
+        if (p.portfolios.length === 0) {
+          notebooksList.innerHTML = "";
+          noNotebooks.classList.remove("hidden");
+        } else {
+          noNotebooks.classList.add("hidden");
+          notebooksList.innerHTML = p.portfolios
+            .map(
+              (n) => `
+            <div class="notebook-item">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex-1 min-w-0">
+                  <p class="notebook-title">${n.title}</p>
+                  <p class="notebook-dept">${n.department || "No department"}</p>
+                </div>
+                ${
+                  isOwn
+                    ? `
+                  <div class="flex gap-1.5 shrink-0">
+                    <button onclick="editNotebook('${n.title}')" class="edit-btn">✏️ Edit</button>
+                    <button onclick="deleteNotebook('${n.title}')" class="delete-btn">🗑️</button>
+                  </div>`
+                    : ""
+                }
+              </div>
+              ${
+                (n.strengths || n.topics || []).length
+                  ? `
+                <div class="mt-3">
+                  <p class="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400 mb-1.5">Strengths</p>
+                  <div class="flex flex-wrap gap-1.5">
+                    ${(n.strengths || n.topics || [])
+                      .map(
+                        (s) =>
+                          `<span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">${s}</span>`,
+                      )
+                      .join("")}
+                  </div>
+                </div>`
+                  : ""
+              }
+              ${
+                (n.weaknesses || []).length
+                  ? `
+                <div class="mt-3">
+                  <p class="text-xs font-bold uppercase tracking-wider text-red-500 dark:text-red-400 mb-1.5">Wants to Learn</p>
+                  <div class="flex flex-wrap gap-1.5">
+                    ${(n.weaknesses || [])
+                      .map(
+                        (w) =>
+                          `<span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">${w}</span>`,
+                      )
+                      .join("")}
+                  </div>
+                </div>`
+                  : ""
+              }
+            </div>`,
+            )
+            .join("");
+        }
+
+        // Connections
+        const matchesList = document.getElementById("matchesList");
+        const noMatches = document.getElementById("noMatches");
+        document.getElementById("matchCount").textContent = p.matches.length
+          ? `· ${p.matches.length}`
+          : "";
+
+        if (p.matches.length === 0) {
+          matchesList.innerHTML = "";
+          noMatches.classList.remove("hidden");
+        } else {
+          noMatches.classList.add("hidden");
+          matchesList.innerHTML = p.matches
+            .map(
+              (u) => `
+            <a href="profile.html?user=${u}" class="match-pill">
+              <div class="match-avatar-sm">${u.slice(0, 2).toUpperCase()}</div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-purple-900 dark:text-purple-100 truncate">@${u}</p>
+                <p class="text-xs text-purple-400">SWAPP match</p>
+              </div>
+              <span class="text-xs text-emerald-500 font-bold shrink-0">✅ Matched</span>
+            </a>`,
+            )
+            .join("");
+        }
+      }
+
+      // ── Edit Modal ────────────────────────────────────────────────────────────
+      function openEditModal() {
+        if (!profileData) return;
+        document.getElementById("editName").value = profileData.name || "";
+        document.getElementById("editCourse").value = profileData.course || "";
+        document.getElementById("editBio").value = profileData.bio || "";
+        document.getElementById("editDept").value =
+          profileData.department || "";
+        document.getElementById("editYear").value = profileData.yearLevel || "";
+        document.getElementById("editModal").classList.add("open");
+      }
+
+      function closeEditModal(e) {
+        if (!e || e.target === document.getElementById("editModal"))
+          document.getElementById("editModal").classList.remove("open");
+      }
+
+      async function saveProfile() {
+        const name = document.getElementById("editName").value.trim();
+        const course = document.getElementById("editCourse").value;
+        const bio = document.getElementById("editBio").value.trim();
+        const department = document.getElementById("editDept").value;
+        const yearLevel = document.getElementById("editYear").value;
+        try {
+          const res = await fetch("/api/profile", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: currentUser.username,
+              name,
+              course,
+              bio,
+              department,
+              yearLevel,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            const updated = { ...currentUser, ...data.user };
+            sessionStorage.setItem("currentUser", JSON.stringify(updated));
+            profileData = { ...profileData, ...data.user };
+            renderProfile(profileData);
+            document.getElementById("editModal").classList.remove("open");
+            showToast("Profile updated! ✨", "green");
+          } else {
+            showToast(data.message || "Failed to save.", "red");
+          }
+        } catch {
+          showToast("Failed to save.", "red");
+        }
+      }
+
+      // ── Notebook actions ──────────────────────────────────────────────────────
+      function editNotebook(title) {
+        sessionStorage.setItem("editNotebook", title);
+        window.location.href = "index.html";
+      }
+
+      async function deleteNotebook(title) {
+        if (!confirm(`Delete "${title}"?`)) return;
+        try {
+          const res = await fetch("/api/portfolios/delete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, author: currentUser.username }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast("Notebook deleted.", "red");
+            loadProfile();
+          }
+        } catch {
+          showToast("Failed to delete.", "red");
+        }
+      }
+
+      // ── Init ──────────────────────────────────────────────────────────────────
+      loadProfile();
+    </script>
+  </body>
+</html>

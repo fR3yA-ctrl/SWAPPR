@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SWAPPR — Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: "class" };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Montserrat", sans-serif;
+      }
+
+      .bg-pattern {
+        background-color: #f5f3ff;
+        background-image:
+          radial-gradient(
+            circle at 15% 25%,
+            rgba(74, 0, 128, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 85% 75%,
+            rgba(91, 91, 214, 0.08) 0%,
+            transparent 50%
+          );
+      }
+      .dark .bg-pattern {
+        background-color: #180f2e;
+        background-image:
+          radial-gradient(
+            circle at 15% 25%,
+            rgba(139, 92, 246, 0.12) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 85% 75%,
+            rgba(74, 0, 128, 0.1) 0%,
+            transparent 50%
+          );
+      }
+
+      .card-shadow {
+        box-shadow:
+          0 0 0 1px #ede9fe,
+          0 20px 60px rgba(74, 0, 128, 0.1);
+      }
+      .dark .card-shadow {
+        box-shadow:
+          0 0 0 1px #3a2565,
+          0 20px 60px rgba(13, 2, 33, 0.6);
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem;
+        border: 1.5px solid #ddd6fe;
+        background: #faf5ff;
+        color: #1e1033;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.875rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .input-field:focus {
+        border-color: #7b2fbe;
+        box-shadow: 0 0 0 3px rgba(123, 47, 190, 0.12);
+      }
+      .dark .input-field {
+        background: #2a1d48;
+        border-color: #3a2565;
+        color: #f0eaff;
+      }
+      .dark .input-field:focus {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+      }
+      .dark .input-field::placeholder {
+        color: #5a4878;
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 0.75rem;
+        background: linear-gradient(135deg, #4a0080, #7b2fbe);
+        color: white;
+        font-weight: 700;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.875rem;
+        letter-spacing: 0.03em;
+        border: none;
+        cursor: pointer;
+        transition:
+          opacity 0.2s,
+          transform 0.15s;
+        box-shadow: 0 4px 14px rgba(74, 0, 128, 0.3);
+      }
+      .btn-primary:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+      }
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 0.55rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        background: transparent;
+        color: #9b8ec4;
+        font-family: "Montserrat", sans-serif;
+      }
+      .tab-btn.active {
+        background: white;
+        color: #4a0080;
+        box-shadow: 0 1px 6px rgba(74, 0, 128, 0.12);
+      }
+      .dark .tab-btn {
+        color: #6040a0;
+      }
+      .dark .tab-btn.active {
+        background: #2a1d48;
+        color: #d0c0f8;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      .tab-bar {
+        background: #f5f3ff;
+        border-radius: 0.75rem;
+      }
+      .dark .tab-bar {
+        background: #180f2e;
+        border: 1px solid #3a2565;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        animation: fadeUp 0.45s ease forwards;
+      }
+
+      .error-msg {
+        color: #ef4444;
+        font-size: 0.78rem;
+        margin-top: 0.4rem;
+        display: none;
+      }
+      .success-msg {
+        color: #7b2fbe;
+        font-size: 0.78rem;
+        margin-top: 0.4rem;
+        display: none;
+      }
+      .dark .success-msg {
+        color: #c4b5fd;
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-pattern dark:bg-pattern min-h-screen flex items-center justify-center transition-colors duration-300"
+  >
+    <button
+      id="themeToggle"
+      class="fixed top-4 right-4 w-9 h-9 rounded-full shadow-sm flex items-center justify-content text-base transition hover:scale-110 border bg-white dark:bg-[#110e20] border-[#ddd6fe] dark:border-white/[0.06]"
+    >
+      🌙
+    </button>
+
+    <div
+      class="fade-up bg-white dark:bg-[#110e20] rounded-2xl p-8 w-full max-w-sm card-shadow transition-colors duration-300"
+    >
+      <!-- Logo -->
+      <div class="text-center mb-7">
+        <div class="flex items-center justify-center gap-2 mb-1">
+          <span class="text-2xl">⇄</span>
+          <h1
+            class="text-2xl font-extrabold tracking-tight text-purple-800 dark:text-purple-300"
+            style="
+              text-shadow:
+                0 0 8px rgba(167, 139, 250, 0.8),
+                0 0 20px rgba(124, 58, 237, 0.5);
+            "
+          >
+            SWAPPR
+          </h1>
+        </div>
+        <p
+          class="text-xs font-semibold tracking-widest uppercase"
+          style="color: #9b8ec4"
+        >
+          Student Skill Exchange
+        </p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar flex gap-1 p-1 mb-6">
+        <button
+          class="tab-btn active"
+          id="loginTab"
+          onclick="switchTab('login')"
+        >
+          Login
+        </button>
+        <button
+          class="tab-btn"
+          id="registerTab"
+          onclick="switchTab('register')"
+        >
+          Register
+        </button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="loginForm">
+        <div class="space-y-4">
+          <div>
+            <label
+              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
+              style="color: #9b8ec4"
+              >Username</label
+            >
+            <input
+              type="text"
+              id="loginUsername"
+              class="input-field"
+              placeholder="Enter your username"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
+              style="color: #9b8ec4"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="loginPassword"
+              class="input-field"
+              placeholder="Enter your password"
+            />
+          </div>
+          <p id="loginError" class="error-msg">Invalid username or password.</p>
+          <button class="btn-primary mt-1" onclick="handleLogin()">
+            Login →
+          </button>
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div id="registerForm" class="hidden">
+        <div class="space-y-4">
+          <div>
+            <label
+              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
+              style="color: #9b8ec4"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              id="regName"
+              class="input-field"
+              placeholder="Enter full name"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
+              style="color: #9b8ec4"
+              >Student ID</label
+            >
+            <input
+              type="text"
+              id="regStudentId"
+              class="input-field"
+              placeholder="e.g. 12345678"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              maxlength="12"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
+              style="color: #9b8ec4"
+              >Course / Program</label
+            >
+            <select id="regCourse" class="input-field">
+              <option value="">Select your course</option>
+              <option value="BS Accountancy">BS Accountancy</option>
+              <option value="BS Architecture">BS Architecture</option>
+              <option value="BS Biology">BS Biology</option>
+              <option value="BS Business Administration">
+                BS Business Administration
+              </option>
+              <option value="BS Chemical Engineering">
+                BS Chemical Engineering
+              </option>
+              <option value="BS Chemistry">BS Chemistry</option>
+              <option value="BS Civil Engineering">BS Civil Engineering</option>
+              <option value="BS Communication">BS Communication</option>
+              <option value="BS Computer Engineering">
+                BS Computer Engineering
+              </option>
+              <option value="BS Computer Science">BS Computer Science</option>
+              <option value="BS Economics">BS Economics</option>
+              <option value="BS Electrical Engineering">
+                BS Electrical Engineering
+              </option>
+              <option value="BS Electronics Engineering">
+                BS Electronics Engineering
+              </option>
+              <option value="BS Fine Arts">BS Fine Arts</option>
+              <option value="BS Hospitality Management">
+                BS Hospitality Management
+              </option>
+              <option value="BS Industrial Engineering">
+                BS Industrial Engineering
+              </option>
+              <option value="BS Information Technology">
+                BS Information Technology
+              </option>
+              <option value="BS Mathematics">BS Mathematics</option>
+              <option value="BS Mechanical Engineering">
+                BS Mechanical Engineering
+              </option>
+              <option value="BS Nursing">BS Nursing</option>
+              <option value="BS Nutrition and Dietetics">
+                BS Nutrition and Dietetics
+              </option>
+              <option value="BS Pharmacy">BS Pharmacy</option>
+              <option value="BS Physics">BS Physics</option>
+              <option value="BS Political Science">BS Political Science</option>
+              <option value="BS Psychology">BS Psychology</option>
+              <option value="AB Anthropology">AB Anthropology</option>
+              <option value="AB History">AB History</option>
+              <option value="AB Literature">AB Literature</option>
+              <option value="AB Philosophy">AB Philosophy</option>
+              <option value="AB Sociology">AB Sociology</option>
+              <option value="JD Law">JD Law</option>
+              <option value="Bachelor of Secondary Education">
+                Bachelor of Secondary Education
+              </option>
+              <option value="Bachelor of Elementary Education">
+                Bachelor of Elementary Education
+              </option>
+            </select>
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
+              style="color: #9b8ec4"
+              >Username</label
+            >
+            <input
+              type="text"
+              id="regUsername"
+              class="input-field"
+              placeholder="Enter username"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
+              style="color: #9b8ec4"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="regPassword"
+              class="input-field"
+              placeholder="Enter password"
+            />
+          </div>
+          <p id="registerError" class="error-msg"></p>
+          <p id="registerSuccess" class="success-msg">
+            Account created! You can now log in.
+          </p>
+          <button class="btn-primary mt-1" onclick="handleRegister()">
+            Create Account →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") document.documentElement.classList.add("dark");
+      const toggle = document.getElementById("themeToggle");
+      toggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+      toggle.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+        const isDark = document.documentElement.classList.contains("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        toggle.textContent = isDark ? "☀️" : "🌙";
+      });
+
+      if (sessionStorage.getItem("currentUser"))
+        window.location.href = "index.html";
+
+      function switchTab(tab) {
+        const isLogin = tab === "login";
+        document
+          .getElementById("loginForm")
+          .classList.toggle("hidden", !isLogin);
+        document
+          .getElementById("registerForm")
+          .classList.toggle("hidden", isLogin);
+        document.getElementById("loginTab").classList.toggle("active", isLogin);
+        document
+          .getElementById("registerTab")
+          .classList.toggle("active", !isLogin);
+      }
+
+      async function handleLogin() {
+        const username = document.getElementById("loginUsername").value.trim();
+        const password = document.getElementById("loginPassword").value.trim();
+        const errorEl = document.getElementById("loginError");
+        errorEl.style.display = "none";
+        if (!username || !password) {
+          errorEl.textContent = "Please fill in all fields.";
+          errorEl.style.display = "block";
+          return;
+        }
+        try {
+          const res = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+          const data = await res.json();
+          if (data.success && data.user && data.user.username) {
+            sessionStorage.setItem("currentUser", JSON.stringify(data.user));
+            window.location.href = "index.html";
+          } else if (data.success) {
+            errorEl.textContent = "Login error. Please try again.";
+            errorEl.style.display = "block";
+          } else {
+            errorEl.textContent =
+              data.message || "Invalid username or password.";
+            errorEl.style.display = "block";
+          }
+        } catch {
+          errorEl.textContent = "Server error. Please try again.";
+          errorEl.style.display = "block";
+        }
+      }
+
+      async function handleRegister() {
+        const name = document.getElementById("regName").value.trim();
+        const studentId = document.getElementById("regStudentId").value.trim();
+        const course = document.getElementById("regCourse").value;
+        const username = document.getElementById("regUsername").value.trim();
+        const password = document.getElementById("regPassword").value.trim();
+        const errorEl = document.getElementById("registerError");
+        const successEl = document.getElementById("registerSuccess");
+        errorEl.style.display = successEl.style.display = "none";
+
+        if (!name || !studentId || !course || !username || !password) {
+          errorEl.textContent = "Please fill in all fields.";
+          errorEl.style.display = "block";
+          return;
+        }
+        if (!/^[0-9]+$/.test(studentId)) {
+          errorEl.textContent = "Student ID must contain numbers only.";
+          errorEl.style.display = "block";
+          return;
+        }
+        if (password.length < 4) {
+          errorEl.textContent = "Password must be at least 4 characters.";
+          errorEl.style.display = "block";
+          return;
+        }
+        try {
+          const res = await fetch("/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              course,
+              username,
+              password,
+              yearLevel: studentId || "",
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            // Reset form fields
+            document.getElementById("regName").value = "";
+            document.getElementById("regStudentId").value = "";
+            document.getElementById("regCourse").value = "";
+            document.getElementById("regUsername").value = "";
+            document.getElementById("regPassword").value = "";
+            // Only auto-login if server returned a valid user object
+            if (data.user && data.user.username) {
+              sessionStorage.setItem("currentUser", JSON.stringify(data.user));
+              window.location.href = "index.html";
+            } else {
+              // Fallback: show success and redirect to login tab
+              successEl.style.display = "block";
+              setTimeout(() => {
+                successEl.style.display = "none";
+                switchTab("login");
+              }, 1800);
+            }
+          } else {
+            errorEl.textContent = data.message || "Registration failed.";
+            errorEl.style.display = "block";
+          }
+        } catch {
+          errorEl.textContent = "Server error. Please try again.";
+          errorEl.style.display = "block";
+        }
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          !document.getElementById("loginForm").classList.contains("hidden")
+            ? handleLogin()
+            : handleRegister();
+        }
+      });
+    </script>
+  </body>
+</html>
