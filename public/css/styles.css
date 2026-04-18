@@ -1,5 +1,7 @@
 /* ── Font ──────────────────────────────────────────────────────────────────── */
-body { font-family: "Montserrat", sans-serif; }
+body {
+  font-family: "Montserrat", sans-serif;
+}
 
 /* ── Input fields ──────────────────────────────────────────────────────────── */
 .input-field {
@@ -12,12 +14,14 @@ body { font-family: "Montserrat", sans-serif; }
   font-family: "Montserrat", sans-serif;
   font-size: 0.875rem;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   display: block;
 }
 .input-field:focus {
   border-color: #7b2fbe;
-  box-shadow: 0 0 0 3px rgba(123,47,190,0.12);
+  box-shadow: 0 0 0 3px rgba(123, 47, 190, 0.12);
 }
 .dark .input-field {
   background: #2a1d48;
@@ -26,15 +30,17 @@ body { font-family: "Montserrat", sans-serif; }
 }
 .dark .input-field:focus {
   border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139,92,246,0.18);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
 }
-.dark .input-field::placeholder { color: #5a4878; }
+.dark .input-field::placeholder {
+  color: #5a4878;
+}
 
 /* ── Primary button ──────────────────────────────────────────────────────── */
 .btn-primary {
   padding: 0.55rem 1.2rem;
   border-radius: 0.75rem;
-  background: linear-gradient(135deg, #4a0080, #7b2fbe);
+  background: linear-gradient(135deg, #4a0080, #6d28d9);
   color: white;
   font-weight: 700;
   font-family: "Montserrat", sans-serif;
@@ -42,11 +48,19 @@ body { font-family: "Montserrat", sans-serif; }
   letter-spacing: 0.03em;
   border: none;
   cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
-  box-shadow: 0 4px 14px rgba(74,0,128,0.28);
+  transition:
+    opacity 0.2s,
+    transform 0.15s;
+  box-shadow: 0 6px 18px rgba(91, 33, 182, 0.35);
 }
-.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
+.btn-primary:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(91, 33, 182, 0.45);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
 
 /* ── Field labels ────────────────────────────────────────────────────────── */
 .field-section-label {
@@ -64,24 +78,29 @@ body { font-family: "Montserrat", sans-serif; }
   color: #6b7280;
   text-decoration: none;
 }
-.dark .sidebar-link { color: #9b8ec4; }
-.sidebar-link:hover, .sidebar-link.active {
+.dark .sidebar-link {
+  color: #9b8ec4;
+}
+.sidebar-link:hover,
+.sidebar-link.active {
   background: #f3e8ff;
   color: #4a0080;
 }
-.dark .sidebar-link:hover, .dark .sidebar-link.active {
-  background: rgba(108,96,184,0.15);
+.dark .sidebar-link:hover,
+.dark .sidebar-link.active {
+  background: rgba(108, 96, 184, 0.15);
   color: #d0c0f8;
 }
 
 /* ── Profile panel ───────────────────────────────────────────────────────── */
 .profile-panel {
   position: fixed;
-  top: 0; right: 0;
+  top: 0;
+  right: 0;
   width: 320px;
   height: 100vh;
   background: white;
-  box-shadow: -4px 0 30px rgba(74,0,128,0.12);
+  box-shadow: -4px 0 30px rgba(74, 0, 128, 0.12);
   transform: translateX(100%);
   transition: transform 0.3s ease;
   z-index: 60;
@@ -90,25 +109,34 @@ body { font-family: "Montserrat", sans-serif; }
 }
 .dark .profile-panel {
   background: #110e20;
-  box-shadow: -4px 0 30px rgba(0,0,0,0.5);
+  box-shadow: -4px 0 30px rgba(0, 0, 0, 0.5);
 }
-.profile-panel.open { transform: translateX(0); }
+.profile-panel.open {
+  transform: translateX(0);
+}
 
 .profile-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.35);
   z-index: 55;
 }
-.profile-overlay.active { display: block; }
+.profile-overlay.active {
+  display: block;
+}
 
 .profile-avatar {
-  width: 72px; height: 72px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   background: linear-gradient(135deg, #4a0080, #7b2fbe);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem; font-weight: 800; color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
   margin: 0 auto 12px;
 }
 
@@ -127,36 +155,43 @@ body { font-family: "Montserrat", sans-serif; }
 }
 .dark .stat-card {
   background: #181428;
-  border-color: rgba(255,255,255,0.06);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 /* ── Modal overlay ───────────────────────────────────────────────────────── */
 .modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex; align-items: center; justify-content: center;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 70;
 }
-.modal-overlay.open { display: flex !important; }
+.modal-overlay.open {
+  display: flex !important;
+}
 
 .modal-box {
   background: white;
   border-radius: 18px;
   padding: 28px 24px;
-  width: 100%; max-width: 480px;
-  box-shadow: 0 20px 60px rgba(74,0,128,0.18);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(74, 0, 128, 0.18);
   max-height: 90vh;
   overflow-y: auto;
 }
 .dark .modal-box {
   background: #110e20;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
 
 /* ── Toast ───────────────────────────────────────────────────────────────── */
 .toast {
   position: fixed;
-  bottom: 24px; left: 50%;
+  bottom: 24px;
+  left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: #1e1033;
   color: white;
@@ -165,7 +200,9 @@ body { font-family: "Montserrat", sans-serif; }
   padding: 10px 20px;
   border-radius: 999px;
   opacity: 0;
-  transition: opacity 0.25s, transform 0.25s;
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
   pointer-events: none;
   z-index: 200;
   white-space: nowrap;
@@ -174,12 +211,17 @@ body { font-family: "Montserrat", sans-serif; }
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
-.toast.green { background: #166534; }
-.toast.red   { background: #991b1b; }
+.toast.green {
+  background: #166534;
+}
+.toast.red {
+  background: #991b1b;
+}
 
 /* ── Notebook edit/delete buttons ────────────────────────────────────────── */
 .edit-btn {
-  font-size: 0.7rem; font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 700;
   padding: 3px 10px;
   border-radius: 8px;
   border: 1.5px solid #ddd6fe;
@@ -189,9 +231,16 @@ body { font-family: "Montserrat", sans-serif; }
   font-family: "Montserrat", sans-serif;
   transition: background 0.15s;
 }
-.edit-btn:hover { background: #f3e8ff; }
-.dark .edit-btn { border-color: #3a2565; color: #c4baf0; }
-.dark .edit-btn:hover { background: rgba(123,47,190,0.1); }
+.edit-btn:hover {
+  background: #f3e8ff;
+}
+.dark .edit-btn {
+  border-color: #3a2565;
+  color: #c4baf0;
+}
+.dark .edit-btn:hover {
+  background: rgba(123, 47, 190, 0.1);
+}
 
 .delete-btn {
   font-size: 0.7rem;
@@ -204,6 +253,12 @@ body { font-family: "Montserrat", sans-serif; }
   font-family: "Montserrat", sans-serif;
   transition: background 0.15s;
 }
-.delete-btn:hover { background: #fef2f2; }
-.dark .delete-btn { border-color: rgba(239,68,68,0.3); }
-.dark .delete-btn:hover { background: rgba(239,68,68,0.1); }
+.delete-btn:hover {
+  background: #fef2f2;
+}
+.dark .delete-btn {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.dark .delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}

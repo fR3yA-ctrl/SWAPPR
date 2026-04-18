@@ -14,7 +14,6 @@
     />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
-
   <body
     class="font-sans min-h-screen transition-colors duration-300 bg-purple-50 text-gray-900 dark:bg-[#0c0a18] dark:text-purple-100"
   >
@@ -38,7 +37,6 @@
           SWAPPR
         </h1>
       </button>
-
       <div class="flex items-center gap-3">
         <button
           id="userBadge"
@@ -51,7 +49,6 @@
           ></span>
           <span class="text-xs">👤</span>
         </button>
-
         <button
           id="addPortfolioBtn"
           onclick="openAddModal()"
@@ -59,14 +56,12 @@
         >
           + Notebook
         </button>
-
         <button
           id="themeToggle"
           class="w-8 h-8 rounded-full flex items-center justify-center transition text-sm border bg-[#faf5ff] dark:bg-[#181428] border-[#ddd6fe] dark:border-white/[0.06]"
         >
           🌙
         </button>
-
         <button
           onclick="handleLogout()"
           class="text-xs font-bold px-3 py-1.5 rounded-full border transition text-purple-700 dark:text-purple-300 border-purple-200 dark:border-white/[0.1] hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-900/40"
@@ -75,7 +70,6 @@
         </button>
       </div>
     </header>
-
     <!-- Main Layout -->
     <div class="flex">
       <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
@@ -126,9 +120,7 @@
             </a>
           </nav>
         </div>
-
         <div class="h-px bg-purple-100 dark:bg-[#3a2565]"></div>
-
         <!-- 🏆 Top Notebooks -->
         <div>
           <p
@@ -140,9 +132,7 @@
             <p class="text-xs text-purple-300 px-2">Loading…</p>
           </div>
         </div>
-
         <div class="h-px bg-purple-100 dark:bg-[#3a2565]"></div>
-
         <!-- 🕒 Recently Added -->
         <div>
           <p
@@ -155,7 +145,6 @@
           </div>
         </div>
       </aside>
-
       <!-- ── Main Content ──────────────────────────────────────────────── -->
       <main class="flex-1 p-8 min-h-0">
         <div class="flex items-center gap-3 mb-6">
@@ -184,7 +173,6 @@
         ></div>
       </main>
     </div>
-
     <!-- ── Profile Panel ──────────────────────────────────────────────────── -->
     <div
       id="profileOverlay"
@@ -268,7 +256,6 @@
         <div id="profileMatchList" class="space-y-2"></div>
       </div>
     </div>
-
     <!-- ── Add / Edit Modal ───────────────────────────────────────────────── -->
     <div
       id="addModal"
@@ -294,7 +281,6 @@
               placeholder="e.g. Data Structures Notes"
             />
           </div>
-
           <div>
             <label class="field-section-label">Short Description</label>
             <textarea
@@ -304,7 +290,6 @@
               placeholder="What's this notebook about? (optional)"
             ></textarea>
           </div>
-
           <div>
             <label class="field-section-label">Department / Subject Tag</label>
             <select id="newDept" class="input-field">
@@ -366,7 +351,6 @@
               </option>
             </select>
           </div>
-
           <div>
             <label class="field-section-label"
               >File URL
@@ -382,7 +366,6 @@
               placeholder="https://drive.google.com/…"
             />
           </div>
-
           <div class="flex justify-end gap-3 pt-2">
             <button
               onclick="closeAddModal()"
@@ -397,7 +380,6 @@
         </div>
       </div>
     </div>
-
     <div id="toast" class="toast"></div>
     <script src="js/script.js"></script>
   </body>
