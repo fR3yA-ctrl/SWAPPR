@@ -1,4 +1,4 @@
-const API = "/api";  // FIX: use relative path, not hardcoded localhost
+const API = "/api"; // FIX: use relative path, not hardcoded localhost
 
 let currentUser = null;
 let currentFilter = "all";
@@ -23,7 +23,11 @@ function attachStaticEventListeners() {
     // Restore saved theme
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") document.documentElement.classList.add("dark");
-    themeToggle.textContent = document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
+    themeToggle.textContent = document.documentElement.classList.contains(
+      "dark",
+    )
+      ? "☀️"
+      : "🌙";
     themeToggle.addEventListener("click", () => {
       document.documentElement.classList.toggle("dark");
       const isDark = document.documentElement.classList.contains("dark");
@@ -67,6 +71,18 @@ function loadUser() {
 function handleLogout() {
   sessionStorage.removeItem("currentUser");
   window.location.href = "login.html";
+}
+
+function toggleChat() {
+  const panel = document.getElementById("chatPanel");
+
+  if (panel.classList.contains("scale-0")) {
+    panel.classList.remove("scale-0", "opacity-0");
+    panel.classList.add("scale-100", "opacity-100");
+  } else {
+    panel.classList.add("scale-0", "opacity-0");
+    panel.classList.remove("scale-100", "opacity-100");
+  }
 }
 
 // ─── NOTEBOOKS ──────────────────────────────────────────
@@ -196,7 +212,8 @@ async function submitPortfolio() {
 
 // ─── SWAPP REQUESTS ─────────────────────────────────────
 function renderRequests() {
-  if (!currentUser) return `<p class="text-sm text-purple-400">Please log in.</p>`;
+  if (!currentUser)
+    return `<p class="text-sm text-purple-400">Please log in.</p>`;
 
   const incoming = swapps.filter(
     (s) => s.receiver === currentUser.username && s.status === "pending",
@@ -368,7 +385,8 @@ async function openProfilePanel() {
     const profile = data.profile;
 
     document.getElementById("profileName").textContent = profile.name;
-    document.getElementById("profileUsername").textContent = "@" + profile.username;
+    document.getElementById("profileUsername").textContent =
+      "@" + profile.username;
     document.getElementById("profileBio").textContent = profile.bio || "";
     document.getElementById("profilePortfolioCount").textContent =
       profile.portfolios.length;
@@ -392,7 +410,8 @@ async function openProfilePanel() {
     list.innerHTML = "";
     profile.portfolios.forEach((p) => {
       const div = document.createElement("div");
-      div.className = "text-sm py-1 border-b border-purple-100 dark:border-white/[0.05]";
+      div.className =
+        "text-sm py-1 border-b border-purple-100 dark:border-white/[0.05]";
       div.textContent = p.title;
       list.appendChild(div);
     });
@@ -401,7 +420,9 @@ async function openProfilePanel() {
     const matchList = document.getElementById("profileMatchList");
     if (matchList) {
       matchList.innerHTML = profile.matches?.length
-        ? profile.matches.map((u) => `<div class="text-xs text-purple-400">@${u}</div>`).join("")
+        ? profile.matches
+            .map((u) => `<div class="text-xs text-purple-400">@${u}</div>`)
+            .join("")
         : `<p class="text-xs text-purple-300">No matches yet.</p>`;
     }
 

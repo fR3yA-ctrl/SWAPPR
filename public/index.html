@@ -14,6 +14,68 @@
     />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
+  <!-- ── Chat Widget (UI Only) ───────────────────────────── -->
+  <!-- Floating Button -->
+  <button
+    id="chatToggle"
+    onclick="toggleChat()"
+    class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-xl shadow-lg flex items-center justify-center z-50 transition"
+  >
+    💬
+  </button>
+
+  <!-- Chat Panel -->
+  <div
+    id="chatPanel"
+    class="fixed bottom-24 right-6 w-80 h-[420px] bg-white dark:bg-[#110e20] border border-purple-100 dark:border-white/[0.06] rounded-2xl shadow-xl flex flex-col overflow-hidden scale-0 opacity-0 origin-bottom-right transition-all duration-300 z-50"
+  >
+    <!-- Header -->
+    <div
+      class="px-4 py-3 flex items-center justify-between border-b border-purple-100 dark:border-white/[0.06]"
+    >
+      <p class="font-bold text-sm text-purple-800 dark:text-purple-200">
+        SWAPPR Chat
+      </p>
+      <button
+        onclick="toggleChat()"
+        class="text-xs opacity-70 hover:opacity-100"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div class="flex-1 p-3 space-y-2 overflow-y-auto text-xs">
+      <div
+        class="bg-purple-100 dark:bg-[#1f1a35] p-2 rounded-lg w-fit max-w-[75%]"
+      >
+        Hey!
+      </div>
+      <div
+        class="bg-purple-600 text-white p-2 rounded-lg w-fit max-w-[75%] ml-auto"
+      >
+        Hello!
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div
+      class="p-2 border-t border-purple-100 dark:border-white/[0.06] flex gap-2"
+    >
+      <input
+        type="text"
+        placeholder="Type a message..."
+        class="flex-1 text-xs px-3 py-2 rounded-lg outline-none input-field"
+        disabled
+      />
+      <button
+        class="px-3 py-2 text-xs rounded-lg bg-purple-600 text-white opacity-60 cursor-not-allowed"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+
   <body
     class="font-sans min-h-screen transition-colors duration-300 bg-purple-50 text-gray-900 dark:bg-[#0c0a18] dark:text-purple-100"
   >
