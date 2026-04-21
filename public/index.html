@@ -14,71 +14,71 @@
     />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
-  <!-- ── Chat Widget (UI Only) ───────────────────────────── -->
-  <!-- Floating Button -->
-  <button
-    id="chatToggle"
-    onclick="toggleChat()"
-    class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-xl shadow-lg flex items-center justify-center z-50 transition"
-  >
-    💬
-  </button>
-
-  <!-- Chat Panel -->
-  <div
-    id="chatPanel"
-    class="fixed bottom-24 right-6 w-80 h-[420px] bg-white dark:bg-[#110e20] border border-purple-100 dark:border-white/[0.06] rounded-2xl shadow-xl flex flex-col overflow-hidden scale-0 opacity-0 origin-bottom-right transition-all duration-300 z-50"
-  >
-    <!-- Header -->
-    <div
-      class="px-4 py-3 flex items-center justify-between border-b border-purple-100 dark:border-white/[0.06]"
-    >
-      <p class="font-bold text-sm text-purple-800 dark:text-purple-200">
-        SWAPPR Chat
-      </p>
-      <button
-        onclick="toggleChat()"
-        class="text-xs opacity-70 hover:opacity-100"
-      >
-        ✕
-      </button>
-    </div>
-
-    <!-- Messages -->
-    <div class="flex-1 p-3 space-y-2 overflow-y-auto text-xs">
-      <div
-        class="bg-purple-100 dark:bg-[#1f1a35] p-2 rounded-lg w-fit max-w-[75%]"
-      >
-        Hey!
-      </div>
-      <div
-        class="bg-purple-600 text-white p-2 rounded-lg w-fit max-w-[75%] ml-auto"
-      >
-        Hello!
-      </div>
-    </div>
-
-    <!-- Input -->
-    <div
-      class="p-2 border-t border-purple-100 dark:border-white/[0.06] flex gap-2"
-    >
-      <input
-        type="text"
-        placeholder="Type a message..."
-        class="flex-1 text-xs px-3 py-2 rounded-lg outline-none input-field"
-        disabled
-      />
-      <button
-        class="px-3 py-2 text-xs rounded-lg bg-purple-600 text-white opacity-60 cursor-not-allowed"
-      >
-        Send
-      </button>
-    </div>
-  </div>
 
   <body
     class="font-sans min-h-screen transition-colors duration-300 bg-purple-50 text-gray-900 dark:bg-[#0c0a18] dark:text-purple-100"
   >
+    <!-- ── Chat Widget (UI Only) ───────────────────────────── -->
+    <!-- Floating Button -->
+    <button
+      id="chatToggle"
+      onclick="toggleChat()"
+      class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-xl shadow-lg flex items-center justify-center z-50 transition"
+    >
+      💬
+    </button>
+
+    <!-- Chat Panel -->
+    <div
+      id="chatPanel"
+      class="fixed bottom-24 right-6 w-80 h-[420px] bg-white dark:bg-[#110e20] border border-purple-100 dark:border-white/[0.06] rounded-2xl shadow-xl flex flex-col overflow-hidden scale-0 opacity-0 origin-bottom-right transition-all duration-300 z-50"
+    >
+      <!-- Header -->
+      <div
+        class="px-4 py-3 flex items-center justify-between border-b border-purple-100 dark:border-white/[0.06]"
+      >
+        <p class="font-bold text-sm text-purple-800 dark:text-purple-200">
+          SWAPPR Workroom (7-day)
+        </p>
+        <button
+          onclick="toggleChat()"
+          class="text-xs opacity-70 hover:opacity-100"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Messages -->
+      <div class="flex-1 p-3 space-y-2 overflow-y-auto text-xs">
+        <div
+          class="bg-purple-100 dark:bg-[#1f1a35] p-2 rounded-lg w-fit max-w-[75%]"
+        >
+          Hey!
+        </div>
+        <div
+          class="bg-purple-600 text-white p-2 rounded-lg w-fit max-w-[75%] ml-auto"
+        >
+          Hello!
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div
+        class="p-2 border-t border-purple-100 dark:border-white/[0.06] flex gap-2"
+      >
+        <input
+          type="text"
+          placeholder="Discuss notes (swap required)..."
+          class="flex-1 text-xs px-3 py-2 rounded-lg outline-none input-field"
+          disabled
+        />
+        <button
+          class="px-3 py-2 text-xs rounded-lg bg-purple-600 text-white opacity-60 cursor-not-allowed"
+        >
+          Send
+        </button>
+      </div>
+    </div>
     <!-- Header -->
     <header
       class="px-6 py-4 flex items-center justify-between bg-white dark:bg-[#110e20] border-b border-purple-100 dark:border-white/[0.06] transition-colors duration-300 sticky top-0 z-40 shadow-sm"
@@ -89,12 +89,7 @@
       >
         <span class="text-2xl">⇄</span>
         <h1
-          class="text-2xl font-extrabold tracking-tight text-purple-800 dark:text-purple-300"
-          style="
-            text-shadow:
-              0 0 8px rgba(167, 139, 250, 0.8),
-              0 0 20px rgba(124, 58, 237, 0.5);
-          "
+          class="text-2xl font-extrabold tracking-tight text-purple-900 dark:text-purple-200"
         >
           SWAPPR
         </h1>
@@ -183,12 +178,12 @@
           </nav>
         </div>
         <div class="h-px bg-purple-100 dark:bg-[#3a2565]"></div>
-        <!-- 🏆 Top Notebooks -->
+        <!-- Trusted Notebooks -->
         <div>
           <p
             class="text-xs font-bold uppercase tracking-widest mb-3 px-2 text-purple-300 dark:text-purple-400 flex items-center gap-1"
           >
-            🏆 Top Notebooks
+            Top Contributors
           </p>
           <div id="sidebarTop" class="space-y-2">
             <p class="text-xs text-purple-300 px-2">Loading…</p>
@@ -209,25 +204,16 @@
       </aside>
       <!-- ── Main Content ──────────────────────────────────────────────── -->
       <main class="flex-1 p-8 min-h-0">
-        <div class="flex items-center gap-3 mb-6">
+        <div class="flex flex-col">
           <h2
             id="sectionTitle"
-            class="text-xl font-extrabold tracking-tight shrink-0 text-purple-900 dark:text-purple-100"
+            class="text-xl font-extrabold tracking-tight text-purple-900 dark:text-purple-100"
           >
             All Notebooks
           </h2>
-          <div class="relative w-72">
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="Search notebooks or authors…"
-              class="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs outline-none transition input-field"
-            />
-            <span
-              class="absolute left-2.5 top-1/2 -translate-y-1/2 text-purple-300 text-xs"
-              >🔍</span
-            >
-          </div>
+          <span class="text-[11px] text-purple-400">
+            Browse verified academic resources • Swap-based access
+          </span>
         </div>
         <div
           id="notebookGrid"
@@ -314,6 +300,9 @@
           class="text-xs font-bold text-purple-400 uppercase tracking-widest mb-3 flex items-center gap-2"
         >
           <span>🤝</span> SWAPP Matches
+        </p>
+        <p class="text-xs text-purple-400 text-center mt-1">
+          Trust Score: <span id="profileTrustScore">98%</span>
         </p>
         <div id="profileMatchList" class="space-y-2"></div>
       </div>
