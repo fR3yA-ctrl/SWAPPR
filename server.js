@@ -46,6 +46,21 @@ name TEXT, username TEXT UNIQUE, password TEXT,
  id INTEGER PRIMARY KEY AUTOINCREMENT,
  sender_id INTEGER, receiver_id INTEGER, status TEXT
  )`);
+
+    // ─── CHAT TABLE ────────────────────────────────────────────────────────
+    // Messages are tied to an accepted Swapp (swap_id).
+    // expires_at = created_at + 7 days, used by the cleanup job.
+    await dbRun(`CREATE TABLE IF NOT EXISTS Messages (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  swap_id    INTEGER NOT NULL,
+  sender_id  INTEGER NOT NULL,
+  content    TEXT    NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  expires_at DATETIME,
+  FOREIGN KEY (swap_id)   REFERENCES Swapps(id)  ON DELETE CASCADE,
+  FOREIGN KEY (sender_id) REFERENCES Users(id)   ON DELETE CASCADE
+)`);
+
     console.log("✅ Database initialized!");
     return true;
   } catch (err) {
@@ -54,16 +69,27 @@ name TEXT, username TEXT UNIQUE, password TEXT,
   }
 }
 
+// ─── CHAT CLEANUP JOB ─────────────────────────────────────────────────────
+// Runs once on startup and then every hour.
+// Deletes any message whose expires_at has passed.
+function runChatCleanup() {
+  db.run(
+    `DELETE FROM Messages WHERE expires_at IS NOT NULL AND expires_at <= datetime('now')`,
+    (err) => {
+      if (err) console.error("❌ Chat cleanup error:", err.message);
+      else console.log("🧹 Chat cleanup ran — expired messages removed.");
+    },
+  );
+}
+
 // ─── AUTH ─────────────────────────────────────────────────────────────────
 app.post("/api/register", (req, res) => {
-  console.log("[REGISTER] Request received:", req.body); // Check the terminal for this!
-
+  console.log("[REGISTER] Request received:", req.body);
   console.log("DEBUG: Incoming request body keys:", Object.keys(req.body));
   console.log("DEBUG: Full body:", JSON.stringify(req.body));
 
   const { name, username, password, course, department, yearLevel } = req.body;
 
-  // 1. Updated Validation: Ensure these three core fields exist
   if (!name || !username || !password) {
     console.log("❌ REJECTED - Missing fields:", { name, username, password });
     return res
@@ -71,7 +97,6 @@ app.post("/api/register", (req, res) => {
       .json({ success: false, message: "Missing required fields" });
   }
 
-  // 2. Check if username exists
   db.get(
     `SELECT id FROM Users WHERE username = ?`,
     [username],
@@ -85,11 +110,8 @@ app.post("/api/register", (req, res) => {
           .status(400)
           .json({ success: false, message: "Username already taken" });
 
-      // 3. Mapping Frontend to Backend fields
-      // Your HTML sends 'course', but your DB has 'course' AND 'department'
       const finalDept = department || course || "";
       const finalCourse = course || "";
-      // Your HTML sends 'yearLevel' as the StudentID value
       const finalYear = yearLevel || "";
 
       db.run(
@@ -120,27 +142,21 @@ app.post("/api/register", (req, res) => {
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
 
-  // 1. Find the user in the database
   db.get(`SELECT * FROM Users WHERE username = ?`, [username], (err, user) => {
     if (err) {
       return res.status(500).json({ success: false, message: "Server error" });
     }
-
-    // 2. Check if user exists
     if (!user) {
       return res
         .status(401)
         .json({ success: false, message: "User not found" });
     }
-
-    // 3. Check if password matches
     if (user.password !== password) {
       return res
         .status(401)
         .json({ success: false, message: "Incorrect password" });
     }
 
-    // 4. Success!
     res.json({
       success: true,
       user: { id: user.id, username: user.username, name: user.name },
@@ -192,7 +208,6 @@ app.get("/api/profile/:username", (req, res) => {
   );
 });
 
-// FIX: Missing PATCH /api/profile endpoint
 app.patch("/api/profile", (req, res) => {
   const { username, name, bio, course, department, yearLevel } = req.body;
   const dept = department || course || "";
@@ -291,7 +306,6 @@ app.put("/api/portfolios/:id", (req, res) => {
   );
 });
 
-// FIX: supports both delete-by-id and delete-by-title+author
 app.post("/api/portfolios/delete", (req, res) => {
   const { id, title, author } = req.body;
   if (id) {
@@ -381,10 +395,168 @@ app.put("/api/swapps/:id/respond", (req, res) => {
   );
 });
 
+// ─── CHAT ─────────────────────────────────────────────────────────────────
+//
+// All chat routes require the swap to exist AND have status='accepted'.
+// This guard is reused by GET and POST below.
+//
+// Helper: verify the swap exists, is accepted, and that `username` is a party.
+function verifySwapAccess(swapId, username, cb) {
+  db.get(
+    `SELECT Swapps.id, Swapps.status, s.username AS sender, r.username AS receiver
+     FROM Swapps
+     JOIN Users s ON Swapps.sender_id = s.id
+     JOIN Users r ON Swapps.receiver_id = r.id
+     WHERE Swapps.id = ?`,
+    [swapId],
+    (err, swap) => {
+      if (err) return cb({ code: 500, message: err.message });
+      if (!swap) return cb({ code: 404, message: "Swap not found" });
+      if (swap.status !== "accepted")
+        return cb({
+          code: 403,
+          message: "Chat is only available for accepted swaps",
+        });
+      if (swap.sender !== username && swap.receiver !== username)
+        return cb({ code: 403, message: "You are not part of this swap" });
+      cb(null, swap);
+    },
+  );
+}
+
+// GET /api/chat/:swapId?username=<username>
+// Returns all messages for the swap, newest last.
+// Also returns who the other party is, and when the chat expires.
+app.get("/api/chat/:swapId", (req, res) => {
+  const { swapId } = req.params;
+  const { username } = req.query;
+
+  if (!username)
+    return res
+      .status(400)
+      .json({ success: false, message: "username query param required" });
+
+  verifySwapAccess(swapId, username, (err, swap) => {
+    if (err)
+      return res
+        .status(err.code)
+        .json({ success: false, message: err.message });
+
+    const otherUser = swap.sender === username ? swap.receiver : swap.sender;
+
+    db.all(
+      `SELECT Messages.id, Messages.content, Messages.created_at, Messages.expires_at,
+              Users.username AS sender
+       FROM Messages
+       JOIN Users ON Messages.sender_id = Users.id
+       WHERE Messages.swap_id = ?
+       ORDER BY Messages.created_at ASC`,
+      [swapId],
+      (err, messages) => {
+        if (err)
+          return res.status(500).json({ success: false, message: err.message });
+
+        // Derive chat expiry from the oldest message's expires_at (all share the same window).
+        // If no messages yet, it hasn't started — return null.
+        const expiresAt = messages.length > 0 ? messages[0].expires_at : null;
+
+        res.json({
+          success: true,
+          swapId: swap.id,
+          otherUser,
+          expiresAt,
+          messages: messages || [],
+        });
+      },
+    );
+  });
+});
+
+// POST /api/chat/:swapId
+// Body: { username, content }
+// Sends a message. expires_at is set to 7 days from NOW for each message.
+app.post("/api/chat/:swapId", (req, res) => {
+  const { swapId } = req.params;
+  const { username, content } = req.body;
+
+  if (!username || !content || !content.trim())
+    return res
+      .status(400)
+      .json({ success: false, message: "username and content are required" });
+
+  verifySwapAccess(swapId, username, (err, swap) => {
+    if (err)
+      return res
+        .status(err.code)
+        .json({ success: false, message: err.message });
+
+    db.get(`SELECT id FROM Users WHERE username=?`, [username], (err, user) => {
+      if (err || !user)
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+
+      db.run(
+        `INSERT INTO Messages (swap_id, sender_id, content, expires_at)
+         VALUES (?, ?, ?, datetime('now', '+7 days'))`,
+        [swapId, user.id, content.trim()],
+        function (err) {
+          if (err)
+            return res
+              .status(500)
+              .json({ success: false, message: err.message });
+          res.json({ success: true, messageId: this.lastID });
+        },
+      );
+    });
+  });
+});
+
+// GET /api/chat/active/:username
+// Returns all accepted swaps that have an active chat (i.e. at least one message),
+// so the frontend knows which conversation threads to show in the chat panel.
+app.get("/api/chat/active/:username", (req, res) => {
+  const { username } = req.params;
+
+  db.get(`SELECT id FROM Users WHERE username=?`, [username], (err, user) => {
+    if (err || !user) return res.json({ success: false, chats: [] });
+
+    db.all(
+      `SELECT Swapps.id AS swapId,
+              s.username AS sender,
+              r.username AS receiver,
+              (SELECT COUNT(*) FROM Messages WHERE swap_id = Swapps.id) AS messageCount,
+              (SELECT MAX(created_at) FROM Messages WHERE swap_id = Swapps.id) AS lastMessageAt
+       FROM Swapps
+       JOIN Users s ON Swapps.sender_id = s.id
+       JOIN Users r ON Swapps.receiver_id = r.id
+       WHERE (Swapps.sender_id = ? OR Swapps.receiver_id = ?)
+         AND Swapps.status = 'accepted'
+       ORDER BY lastMessageAt DESC`,
+      [user.id, user.id],
+      (err, rows) => {
+        if (err) return res.json({ success: false, chats: [] });
+
+        const chats = (rows || []).map((row) => ({
+          swapId: row.swapId,
+          otherUser: row.sender === username ? row.receiver : row.sender,
+          messageCount: row.messageCount,
+          lastMessageAt: row.lastMessageAt,
+        }));
+
+        res.json({ success: true, chats });
+      },
+    );
+  });
+});
+
 // ─── START ────────────────────────────────────────────────────────────────
-// ✅ WAIT for database to be ready before starting server
 initializeDatabase().then((success) => {
   if (success) {
+    // Run cleanup immediately on startup, then every hour
+    runChatCleanup();
+    setInterval(runChatCleanup, 60 * 60 * 1000);
+
     app.listen(PORT, () =>
       console.log(`🚀 SWAPPR running at http://localhost:${PORT}`),
     );
