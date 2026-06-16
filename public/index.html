@@ -3,62 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SWAPPR</title>
+    <title>SWAPPR — Study Together</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = { darkMode: "class" };
     </script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
   </head>
 
   <body
-    class="font-sans min-h-screen transition-colors duration-300 bg-purple-50 text-gray-900 dark:bg-[#0c0a18] dark:text-purple-100"
+    class="font-sans min-h-screen overflow-x-hidden transition-colors duration-300 text-gray-900 dark:text-purple-100 bg-transparent"
   >
-    <!-- ── Chat Widget (UI Only) ───────────────────────────── -->
-    <!-- Floating Button -->
+    <!-- ── Chat Widget ───────────────────────────── -->
     <button
       id="chatToggle"
       onclick="toggleChat()"
       class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-xl shadow-lg flex items-center justify-center z-50 transition"
+      title="Open Chat"
     >
-      💬
+      <i data-lucide="message-circle" class="w-6 h-6"></i>
     </button>
 
     <!-- Chat Panel -->
     <div
       id="chatPanel"
-      class="fixed bottom-24 right-6 w-80 h-[420px] bg-white dark:bg-[#110e20] border border-purple-100 dark:border-white/[0.06] rounded-2xl shadow-xl flex flex-col overflow-hidden scale-0 opacity-0 origin-bottom-right transition-all duration-300 z-50"
+      class="fixed bottom-24 right-6 w-80 h-[420px] bg-[#0f0b1d] text-white dark:bg-[#463681] border border-purple-500/20 dark:border-gray-200 rounded-2xl shadow-xl flex flex-col overflow-hidden scale-0 opacity-0 origin-bottom-right transition-all duration-300 z-50"
     >
       <!-- Header -->
       <div
-        class="px-4 py-3 flex items-center justify-between border-b border-purple-100 dark:border-white/[0.06]"
+        class="px-4 py-3 flex items-center justify-between border-b border-purple-100 dark:border-[#2e2258] bg-purple-700 dark:bg-[#2b1f52] text-white"
       >
-        <p class="font-bold text-sm text-purple-800 dark:text-purple-200">
-          SWAPPR Workroom (7-day)
+        <p class="font-bold text-sm text-[#2e1065] dark:text-purple-200">
+          SWAPPR Workroom
         </p>
         <button
           onclick="toggleChat()"
           class="text-xs opacity-70 hover:opacity-100"
         >
-          ✕
+          <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
       <!-- Messages -->
-      <div class="flex-1 p-3 space-y-2 overflow-y-auto text-xs">
+      <div class="flex-1 p-3 space-y-2 overflow-y-auto text-xs bg-[#463681]">
         <div
-          class="bg-purple-100 dark:bg-[#1f1a35] p-2 rounded-lg w-fit max-w-[75%]"
+          class="bg-white/10 dark:bg-purple-100 text-white dark:text-gray-900 p-2 rounded-lg w-fit max-w-[75%]"
         >
-          Hey!
+          Hey! Ready to swap notes?
         </div>
         <div
-          class="bg-purple-600 text-white p-2 rounded-lg w-fit max-w-[75%] ml-auto"
+          class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white dark:from-purple-600 dark:to-indigo-600 p-2 rounded-lg w-fit max-w-[75%] ml-auto"
         >
-          Hello!
+          Yes! Let's collaborate!
         </div>
       </div>
 
@@ -79,59 +80,62 @@
         </button>
       </div>
     </div>
+
     <!-- Header -->
     <header
-      class="px-6 py-4 flex items-center justify-between bg-white dark:bg-[#110e20] border-b border-purple-100 dark:border-white/[0.06] transition-colors duration-300 sticky top-0 z-40 shadow-sm"
+      class="w-full overflow-hidden px-4 py-4 flex items-center justify-between gap-3 bg-gradient-to-r from-[#0f172a] via-[#4f46e5] to-[#9333ea] text-white sticky top-0 z-40 shadow-lg"
     >
       <button
         onclick="filterBy('all')"
-        class="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0 transition-opacity hover:opacity-75"
+        class="flex items-center gap-2 shrink-0"
       >
-        <span class="text-2xl">⇄</span>
+        <i data-lucide="repeat" class="w-6 h-6"></i>
         <h1
-          class="text-2xl font-extrabold tracking-tight text-purple-900 dark:text-purple-200"
+          class="text-2xl font-extrabold tracking-tight truncate text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-500 dark:from-purple-300 dark:to-indigo-300"
         >
           SWAPPR
         </h1>
       </button>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 min-w-0 flex-wrap">
         <button
           id="userBadge"
           onclick="openProfilePanel()"
-          class="hidden items-center gap-2 px-3 py-1.5 rounded-full border transition cursor-pointer bg-[#faf5ff] dark:bg-[#181428] border-[#ddd6fe] dark:border-white/[0.06]"
+          class="hidden flex items-center gap-2 px-3 py-1.5 rounded-full glass-btn"
         >
           <span
             class="text-xs font-bold text-[#4a0080] dark:text-[#d0c0f8]"
             id="userBadgeName"
           ></span>
-          <span class="text-xs">👤</span>
+          <i data-lucide="user" class="w-4 h-4"></i>
         </button>
         <button
           id="addPortfolioBtn"
           onclick="openAddModal()"
-          class="hidden text-xs font-bold px-4 py-2 rounded-full text-white transition shadow-sm btn-primary"
+          class="hidden text-xs font-bold px-4 py-2 rounded-full text-white bg-gradient-to-r from-purple-500 to-indigo-500 shadow"
         >
           + Notebook
         </button>
         <button
           id="themeToggle"
-          class="w-8 h-8 rounded-full flex items-center justify-center transition text-sm border bg-[#faf5ff] dark:bg-[#181428] border-[#ddd6fe] dark:border-white/[0.06]"
+          class="w-8 h-8 rounded-full flex items-center justify-center glass-btn hover:scale-110 transition"
+          title="Toggle theme"
         >
-          🌙
+          <i data-lucide="moon" class="w-5 h-5"></i>
         </button>
         <button
           onclick="handleLogout()"
-          class="text-xs font-bold px-3 py-1.5 rounded-full border transition text-purple-700 dark:text-purple-300 border-purple-200 dark:border-white/[0.1] hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-900/40"
+          class="text-xs font-bold px-3 py-1.5 rounded-full glass-btn hover:bg-red-500/20 hover:scale-105 transition"
         >
           Logout
         </button>
       </div>
     </header>
+
     <!-- Main Layout -->
-    <div class="flex">
+    <div class="flex min-w-0">
       <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
       <aside
-        class="w-56 bg-white dark:bg-[#110e20] p-5 hidden md:flex flex-col gap-6 shrink-0 border-r border-purple-100 dark:border-white/[0.06] sticky top-[65px] h-[calc(100vh-65px)] overflow-y-auto"
+        class="w-56 bg-white/70 backdrop-blur-md dark:bg-[#110e20] p-5 hidden md:flex flex-col gap-6 shrink-0 border-r border-purple-100 dark:border-white/[0.06] sticky top-[65px] h-[calc(100vh-65px)] overflow-y-auto"
       >
         <!-- Browse nav -->
         <div>
@@ -144,93 +148,148 @@
             <a
               href="#"
               data-filter="all"
-              onclick="filterBy('all')"
-              class="sidebar-link active flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition"
-              >📚 All Notebooks</a
+              onclick="
+                filterBy('all');
+                return false;
+              "
+              class="sidebar-link active flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
             >
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              All Notebooks
+            </a>
             <a
               href="#"
               data-filter="mine"
-              onclick="filterBy('mine')"
-              class="sidebar-link flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition"
-              >📓 My Notebooks</a
+              onclick="
+                filterBy('mine');
+                return false;
+              "
+              class="sidebar-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
             >
+              <i data-lucide="notebook" class="w-4 h-4"></i>
+              My Notebooks
+            </a>
             <a
               href="#"
               data-filter="matched"
-              onclick="filterBy('matched')"
-              class="sidebar-link flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition"
-              >🤝 My SWAPPs</a
+              onclick="
+                filterBy('matched');
+                return false;
+              "
+              class="sidebar-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
             >
+              <i data-lucide="handshake" class="w-4 h-4"></i>
+              My SWAPPs
+            </a>
             <a
               href="#"
               data-filter="requests"
-              onclick="filterBy('requests')"
-              class="sidebar-link flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition"
+              onclick="
+                filterBy('requests');
+                return false;
+              "
+              class="sidebar-link flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
             >
-              <span>📩 Requests</span>
+              <span class="flex items-center gap-2">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+                Requests
+              </span>
               <span
                 id="requestsBadge"
                 class="hidden bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
                 >0</span
               >
             </a>
+            <a
+              href="#"
+              data-filter="top"
+              onclick="
+                filterBy('top');
+                return false;
+              "
+              class="sidebar-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
+            >
+              <i data-lucide="trophy" class="w-4 h-4"></i>
+              Top Contributors
+            </a>
+
+            <a
+              href="#"
+              data-filter="recent"
+              onclick="
+                filterBy('recent');
+                return false;
+              "
+              class="sidebar-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
+            >
+              <i data-lucide="clock" class="w-4 h-4"></i>
+              Recently Added
+            </a>
           </nav>
         </div>
-        <div class="h-px bg-purple-100 dark:bg-[#3a2565]"></div>
-        <!-- Trusted Notebooks -->
-        <div>
-          <p
-            class="text-xs font-bold uppercase tracking-widest mb-3 px-2 text-purple-300 dark:text-purple-400 flex items-center gap-1"
-          >
-            Top Contributors
-          </p>
-          <div id="sidebarTop" class="space-y-2">
-            <p class="text-xs text-purple-300 px-2">Loading…</p>
-          </div>
-        </div>
-        <div class="h-px bg-purple-100 dark:bg-[#3a2565]"></div>
-        <!-- 🕒 Recently Added -->
-        <div>
-          <p
-            class="text-xs font-bold uppercase tracking-widest mb-3 px-2 text-purple-300 dark:text-purple-400 flex items-center gap-1"
-          >
-            🕒 Recently Added
-          </p>
-          <div id="sidebarRecent" class="space-y-2">
-            <p class="text-xs text-purple-300 px-2">Loading…</p>
-          </div>
-        </div>
-      </aside>
-      <!-- ── Main Content ──────────────────────────────────────────────── -->
-      <main class="flex-1 p-8 min-h-0">
-        <div class="flex flex-col">
-          <h2
-            id="sectionTitle"
-            class="text-xl font-extrabold tracking-tight text-purple-900 dark:text-purple-100"
-          >
-            All Notebooks
-          </h2>
-          <span class="text-[11px] text-purple-400">
-            Browse verified academic resources • Swap-based access
-          </span>
-        </div>
+
         <div
-          id="notebookGrid"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          class="h-px bg-gradient-to-r from-transparent via-purple-200 dark:via-purple-500/20 to-transparent"
         ></div>
+      </aside>
+
+      <!-- ── Main Content ──────────────────────────────────────────────── -->
+      <main class="flex-1 min-w-0 p-4 md:p-8 min-h-0">
+        <div class="max-w-7xl mx-auto">
+          <!-- Section Header -->
+          <div
+            class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4"
+          >
+            <div>
+              <h2
+                id="sectionTitle"
+                class="text-3xl font-extrabold text-gray-800 dark:text-purple-100"
+              >
+                All Notebooks
+              </h2>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Discover and exchange study materials
+              </p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="w-full md:w-auto md:min-w-[300px]">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search notebooks or users..."
+                class="w-full px-4 py-2.5 rounded-xl border-2 border-purple-200 dark:border-purple-500/30 bg-white dark:bg-[#1a1432] focus:border-purple-500 dark:focus:border-purple-400 outline-none transition text-sm"
+              />
+            </div>
+          </div>
+
+          <!-- Notebooks Grid -->
+          <div id="notebookGrid" class="notebooks-grid">
+            <!-- Notebooks will be dynamically inserted here -->
+            <div class="col-span-full text-center py-12">
+              <div
+                class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-200 border-t-purple-600"
+              ></div>
+              <p class="mt-4 text-gray-500 dark:text-gray-400">
+                Loading notebooks...
+              </p>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
-    <!-- ── Profile Panel ──────────────────────────────────────────────────── -->
+
+    <!-- ── Profile Panel (Overlay) ──────────────────────────────────────── -->
     <div
       id="profileOverlay"
       class="profile-overlay"
       onclick="closeProfilePanel()"
     ></div>
+
     <div id="profilePanel" class="profile-panel">
       <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-2">
-          <span class="text-lg">⇄</span>
+          <i data-lucide="repeat" class="w-5 h-5"></i>
           <span
             class="text-sm font-extrabold tracking-widest uppercase text-purple-800 dark:text-purple-200"
             >Profile</span
@@ -240,12 +299,13 @@
           onclick="closeProfilePanel()"
           class="w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold bg-purple-100 dark:bg-[#181428] text-purple-400 hover:bg-purple-200 dark:hover:bg-[#3a2565] transition"
         >
-          ✕
+          <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
+
       <div class="panel-hero mb-6">
         <div class="profile-avatar mx-auto mb-3">
-          <span id="profileInitials"></span>
+          <span id="profileInitials">US</span>
         </div>
         <p
           class="font-extrabold text-white text-lg text-center leading-tight"
@@ -257,6 +317,7 @@
         ></p>
         <p class="text-xs text-purple-400 text-center mt-2" id="profileBio"></p>
       </div>
+
       <div class="grid grid-cols-2 gap-3 mb-6">
         <div class="stat-card">
           <p
@@ -268,7 +329,7 @@
           <p
             class="text-xs text-purple-400 font-semibold mt-1 uppercase tracking-wider"
           >
-            Portfolios
+            Notebooks
           </p>
         </div>
         <div class="stat-card">
@@ -285,28 +346,40 @@
           </p>
         </div>
       </div>
+
       <div class="h-px bg-purple-100 dark:bg-[#3a2565] mb-5"></div>
+
       <div class="mb-6">
         <p
-          class="text-xs font-bold text-purple-400 uppercase tracking-widest mb-3 flex items-center gap-2"
+          class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-3 flex items-center gap-2"
         >
-          <span>📚</span> My Notebooks
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          My Notebooks
         </p>
-        <div id="profilePortfolioList" class="space-y-2"></div>
+        <div
+          id="profilePortfolioList"
+          class="space-y-2 max-h-60 overflow-y-auto"
+        ></div>
       </div>
+
       <div class="h-px bg-purple-100 dark:bg-[#3a2565] mb-5"></div>
+
       <div>
         <p
-          class="text-xs font-bold text-purple-400 uppercase tracking-widest mb-3 flex items-center gap-2"
+          class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-3 flex items-center gap-2"
         >
-          <span>🤝</span> SWAPP Matches
+          <i data-lucide="handshake" class="w-4 h-4"></i>
+          SWAPP Matches
         </p>
-        <p class="text-xs text-purple-400 text-center mt-1">
-          Trust Score: <span id="profileTrustScore">98%</span>
+        <p
+          class="text-xs text-purple-500 dark:text-purple-400 text-center mb-3"
+        >
+          Trust Score: <span id="profileTrustScore" class="font-bold">98%</span>
         </p>
         <div id="profileMatchList" class="space-y-2"></div>
       </div>
     </div>
+
     <!-- ── Add / Edit Modal ───────────────────────────────────────────────── -->
     <div
       id="addModal"
@@ -316,33 +389,35 @@
       <div class="modal-box">
         <h3
           id="modalHeading"
-          class="text-lg font-extrabold mb-5 text-purple-900 dark:text-purple-100"
+          class="text-2xl font-extrabold mb-5 text-purple-900 dark:text-purple-100 flex items-center gap-2"
         >
+          <i data-lucide="book-open" class="w-6 h-6"></i>
           New Notebook
         </h3>
         <div class="space-y-4">
           <div>
             <label class="field-section-label"
-              >Title <span class="text-red-400">*</span></label
+              >Title <span class="text-red-500">*</span></label
             >
             <input
               type="text"
               id="newTitle"
               class="input-field"
               placeholder="e.g. Data Structures Notes"
+              required
             />
           </div>
           <div>
             <label class="field-section-label">Short Description</label>
             <textarea
               id="newDescription"
-              rows="2"
+              rows="3"
               class="input-field resize-none"
-              placeholder="What's this notebook about? (optional)"
+              placeholder="What's this notebook about? Help others discover your content!"
             ></textarea>
           </div>
           <div>
-            <label class="field-section-label">Department / Subject Tag</label>
+            <label class="field-section-label">Department / Subject</label>
             <select id="newDept" class="input-field">
               <option value="">— Select department —</option>
               <option value="BS Computer Science">BS Computer Science</option>
@@ -405,13 +480,12 @@
           <div>
             <label class="field-section-label"
               >File URL
-              <span
-                class="text-purple-300 font-normal normal-case tracking-normal"
+              <span class="text-purple-400 font-normal normal-case"
                 >(Google Drive, Notion, etc.)</span
               ></label
             >
             <input
-              type="text"
+              type="url"
               id="newFileUrl"
               class="input-field"
               placeholder="https://drive.google.com/…"
@@ -420,18 +494,25 @@
           <div class="flex justify-end gap-3 pt-2">
             <button
               onclick="closeAddModal()"
-              class="text-sm font-semibold text-purple-300 hover:text-purple-600 transition"
+              class="text-sm font-semibold px-4 py-2 rounded-lg text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition"
             >
               Cancel
             </button>
             <button onclick="submitPortfolio()" class="btn-primary">
-              Publish
+              Publish Notebook
             </button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
+
     <script src="js/script.js"></script>
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+    </script>
   </body>
 </html>

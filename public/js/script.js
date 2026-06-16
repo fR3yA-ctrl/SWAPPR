@@ -10,33 +10,50 @@ document.addEventListener("DOMContentLoaded", () => {
   // FIX: use sessionStorage (consistent with login.html)
   loadUser();
   loadNotebooks();
-  loadSidebar();
   loadSwapps();
   attachStaticEventListeners();
 });
 
 // ─── STATIC BUTTONS ─────────────────────────────────────
 function attachStaticEventListeners() {
-  // FIX: themeToggle is the correct ID in index.html (not darkModeBtn)
   const themeToggle = document.getElementById("themeToggle");
+
+  function updateThemeIcon() {
+    if (!themeToggle) return;
+
+    const isDark = document.documentElement.classList.contains("dark");
+    const nextIcon = isDark ? "sun" : "moon";
+
+    // Always reset icon safely
+    themeToggle.innerHTML = `
+      <i data-lucide="${nextIcon}" class="w-5 h-5"></i>
+    `;
+
+    lucide.createIcons();
+  }
+
   if (themeToggle) {
     // Restore saved theme
     const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") document.documentElement.classList.add("dark");
-    themeToggle.textContent = document.documentElement.classList.contains(
-      "dark",
-    )
-      ? "☀️"
-      : "🌙";
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    }
+
+    // Set correct icon on load
+    updateThemeIcon();
+
+    // Toggle theme
     themeToggle.addEventListener("click", () => {
       document.documentElement.classList.toggle("dark");
+
       const isDark = document.documentElement.classList.contains("dark");
       localStorage.setItem("theme", isDark ? "dark" : "light");
-      themeToggle.textContent = isDark ? "☀️" : "🌙";
+
+      updateThemeIcon(); // update icon after toggle
     });
   }
 
-  // FIX: search input - attach event listener here
+  // Search input
   const searchInput = document.getElementById("searchInput");
   if (searchInput) {
     searchInput.addEventListener("input", renderNotebooks);
@@ -134,6 +151,30 @@ function renderNotebooks() {
     return;
   }
 
+  if (currentFilter === "top") {
+    // Count notebooks per user
+    const userCounts = {};
+    notebooks.forEach((n) => {
+      userCounts[n.username] = (userCounts[n.username] || 0) + 1;
+    });
+
+    // Sort users by count
+    const topUsers = Object.entries(userCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10) // Top 10 contributors
+      .map(([username]) => username);
+
+    // Filter notebooks from top contributors
+    filtered = filtered.filter((n) => topUsers.includes(n.username));
+  }
+
+  // Recently Added Filter
+  if (currentFilter === "recent") {
+    // Sort by most recent (assuming notebooks have a timestamp or ID)
+    // If you have a createdAt field, use that. Otherwise, reverse the array
+    filtered = [...filtered].reverse().slice(0, 20); // Show 20 most recent
+  }
+
   if (filtered.length === 0) {
     grid.innerHTML = `<p class="text-sm text-purple-400">No results found.</p>`;
     return;
@@ -141,7 +182,7 @@ function renderNotebooks() {
 
   filtered.forEach((n) => {
     const card = document.createElement("div");
-    card.className = "p-4 rounded-xl bg-white dark:bg-[#181428] shadow";
+    card.className = "notebook-card";
 
     const canSwapp =
       currentUser &&
@@ -152,37 +193,155 @@ function renderNotebooks() {
           (s.receiver === currentUser.username && s.sender === n.username),
       );
 
+    const hasSwapp = swapps.some(
+      (s) =>
+        ((s.sender === currentUser?.username && s.receiver === n.username) ||
+          (s.receiver === currentUser?.username && s.sender === n.username)) &&
+        s.status === "accepted",
+    );
+
+    const maxDescLength = 100;
+    const displayDesc = n.description
+      ? n.description.length > maxDescLength
+        ? n.description.slice(0, maxDescLength) + "..."
+        : n.description
+      : "No description provided";
+
+    const wordCount = n.wordCount || Math.floor(Math.random() * 12000) + 2000;
+
     card.innerHTML = `
-      <h3 class="font-bold text-lg">${n.title}</h3>
-      <p class="text-xs text-purple-400">${n.username}</p>
-      <p class="text-sm mt-2">${n.description || ""}</p>
-      <div class="flex justify-between items-center mt-4">
-        <span>❤️ ${n.likes || 0}</span>
-        <div class="flex gap-2">
-          <div class="like-container"></div>
-          <div class="swapp-container"></div>
-        </div>
-      </div>
-    `;
 
-    if (currentUser && n.username !== currentUser.username) {
-      const likeBtn = document.createElement("button");
-      likeBtn.textContent = "❤️ Like";
-      likeBtn.className = "text-sm px-2 py-1 rounded bg-purple-400 text-white";
-      likeBtn.addEventListener("click", () => likeNotebook(n.id));
-      card.querySelector(".like-container").appendChild(likeBtn);
-    }
+<div class="mb-3">
+  <h3 class="text-xl font-extrabold text-gray-900 dark:text-purple-100 leading-tight">
+    ${n.title || "Untitled Notebook"}
+  </h3>
 
-    if (canSwapp) {
-      const swappBtn = document.createElement("button");
-      swappBtn.textContent = "⇄ SWAPP";
-      swappBtn.className = "text-sm px-2 py-1 rounded bg-indigo-500 text-white";
-      swappBtn.addEventListener("click", () => sendSwapp(n.username));
-      card.querySelector(".swapp-container").appendChild(swappBtn);
+  <p class="text-sm text-purple-500 dark:text-purple-400 mt-1">
+    by @${n.username || "anonymous"}
+  </p>
+
+  <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-3">
+    ${displayDesc}
+  </p>
+</div>
+
+<div class="academic-meta">
+  ${n.department || "General"} • 
+  ${n.courseCode || "COURSE"} • 
+  ${n.examTag || "Reviewer"}
+</div>
+
+<div class="effort-badge">
+  ${
+    wordCount > 15000
+      ? "Deep Dive"
+      : wordCount > 8000
+        ? "Comprehensive"
+        : wordCount > 4000
+          ? "Standard Notes"
+          : "Quick Review"
+  }
+</div>
+
+<div class="metadata-dashboard">
+
+  <div class="meta-pill">
+    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+    ${(n.wordCount || 12540).toLocaleString()} words
+  </div>
+
+  <div class="meta-pill">
+    <i data-lucide="image" class="w-3.5 h-3.5"></i>
+    ${n.imageCount || 18} diagrams
+  </div>
+
+  <div class="meta-pill">
+    <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+    ${n.pageCount || 72} pages
+  </div>
+
+  <div class="meta-pill">
+    <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
+    ${n.readTime || 48} min read
+  </div>
+
+</div>
+
+<div class="trust-score">
+  <i data-lucide="shield-check" class="w-4 h-4"></i>
+  ${n.trustScore || 98}% Trust Score
+</div>
+
+<div class="card-footer flex justify-between items-center">
+  <span class="text-[10px] text-purple-400 uppercase tracking-wider">
+    Preview • Unlock via SWAP
+  </span>
+
+  <div class="action-container"></div>
+</div>
+`;
+
+    const actionContainer = card.querySelector(".action-container");
+
+    // Show appropriate button based on state
+    if (n.username === currentUser?.username) {
+      // Own notebook - no action needed
+      const badge = document.createElement("span");
+      badge.className = "text-xs text-purple-400 font-medium";
+      badge.textContent = "Your Notebook";
+      actionContainer.appendChild(badge);
+    } else if (hasSwapp) {
+      // Already swapped - show access
+      const accessBtn = document.createElement("button");
+      accessBtn.textContent = "🔓 Access";
+      accessBtn.className =
+        "text-sm px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition shadow-sm";
+      accessBtn.addEventListener("click", () => {
+        if (n.fileUrl || n.file_url) {
+          window.open(n.fileUrl || n.file_url, "_blank");
+        } else {
+          showToast("No file URL available");
+        }
+      });
+      actionContainer.appendChild(accessBtn);
+    } else if (canSwapp) {
+      // Can initiate swap
+      const swapBtn = document.createElement("button");
+      swapBtn.textContent = "⇄ Request Swap";
+      swapBtn.className =
+        "text-sm px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition shadow-sm";
+      swapBtn.addEventListener("click", async () => {
+        swapBtn.disabled = true;
+        swapBtn.textContent = "Sending...";
+
+        try {
+          await sendSwapp(n.username);
+          showToast("Swap request sent!");
+          await loadSwapps();
+          renderNotebooks(); // Refresh to show "Pending" state
+        } catch (err) {
+          showToast("Failed to send request");
+          console.error(err);
+        } finally {
+          swapBtn.disabled = false;
+          swapBtn.textContent = "⇄ Request Swap";
+        }
+      });
+      actionContainer.appendChild(swapBtn);
+    } else {
+      // Pending swap
+      const pendingBadge = document.createElement("span");
+      pendingBadge.className =
+        "text-xs text-yellow-600 dark:text-yellow-400 font-medium";
+      pendingBadge.textContent = "Swap Pending...";
+      actionContainer.appendChild(pendingBadge);
     }
 
     grid.appendChild(card);
   });
+
+  // FIX: Reinitialize icons after rendering
+  lucide.createIcons();
 }
 
 // ─── CREATE NOTEBOOK ────────────────────────────────────
@@ -194,20 +353,33 @@ async function submitPortfolio() {
 
   if (!title) return alert("Title required");
 
-  await fetch(`${API}/portfolios`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      title,
-      description,
-      department,
-      fileUrl,
-      author: currentUser.username,
-    }),
-  });
+  try {
+    const res = await fetch(`${API}/portfolios`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        description,
+        department,
+        fileUrl,
+        username: currentUser.username,
+      }),
+    });
 
-  closeAddModal();
-  loadNotebooks();
+    const data = await res.json();
+
+    if (!data.success) {
+      showToast(data.message || "Failed to create notebook");
+      return;
+    }
+
+    showToast("Notebook created!");
+    closeAddModal();
+    loadNotebooks();
+  } catch (err) {
+    console.error(err);
+    showToast("Server error");
+  }
 }
 
 // ─── SWAPP REQUESTS ─────────────────────────────────────
@@ -220,17 +392,27 @@ function renderRequests() {
   );
 
   if (incoming.length === 0) {
-    return `<p class="text-sm text-purple-400">No requests.</p>`;
+    return `<p class="text-sm text-purple-400 text-center py-8">No pending requests.</p>`;
   }
 
   return incoming
     .map(
       (s) => `
-    <div class="p-4 rounded-xl bg-white dark:bg-[#181428] shadow mb-3">
-      <p class="text-sm font-semibold">${s.sender} wants to SWAPP</p>
-      <div class="flex gap-2 mt-3">
-        <button class="text-green-500 respond-btn" data-id="${s.id}" data-status="accepted">Accept</button>
-        <button class="text-red-500 respond-btn" data-id="${s.id}" data-status="rejected">Deny</button>
+    <div class="p-5 rounded-xl bg-white dark:bg-[#181428] shadow border border-purple-100 dark:border-white/[0.06] mb-4">
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          <p class="text-sm font-bold text-purple-900 dark:text-purple-100">@${s.sender} wants to swap</p>
+          <p class="text-xs text-purple-400 mt-1">Pending your approval</p>
+        </div>
+        <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 font-medium">Pending</span>
+      </div>
+      <div class="flex gap-2 mt-4">
+        <button class="respond-btn flex-1 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition" data-id="${s.id}" data-status="accepted">
+          ✓ Accept
+        </button>
+        <button class="respond-btn flex-1 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition" data-id="${s.id}" data-status="rejected">
+          ✕ Deny
+        </button>
       </div>
     </div>
   `,
@@ -244,6 +426,9 @@ function attachRequestListeners() {
       respondSwapp(btn.dataset.id, btn.dataset.status);
     });
   });
+
+  // FIX: Reinitialize icons after rendering request buttons
+  lucide.createIcons();
 }
 
 // ─── LIKE ───────────────────────────────────────────────
@@ -276,8 +461,9 @@ async function loadTop() {
     container.innerHTML = "";
     data.portfolios?.forEach((n) => {
       const div = document.createElement("div");
-      div.className = "text-xs";
-      div.textContent = `${n.title} ❤️ ${n.likes || 0}`;
+      div.className =
+        "text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-200 transition cursor-pointer";
+      div.textContent = `${n.title}`;
       container.appendChild(div);
     });
   } catch {}
@@ -308,6 +494,8 @@ function filterBy(type) {
     mine: "My Notebooks",
     matched: "SWAPP Matches",
     requests: "Requests",
+    top: "Top Contributors",
+    recent: "Recently Added",
   };
 
   const sectionTitle = document.getElementById("sectionTitle");
@@ -317,6 +505,9 @@ function filterBy(type) {
   document.querySelectorAll(".sidebar-link").forEach((link) => {
     link.classList.toggle("active", link.dataset.filter === type);
   });
+
+  // FIX: Reinitialize icons after sidebar link update
+  lucide.createIcons();
 
   renderNotebooks();
 }
@@ -350,7 +541,8 @@ function updateRequestBadge() {
 }
 
 async function sendSwapp(toUsername) {
-  await fetch(`${API}/swapps`, {
+  console.log("Sending swap request to:", toUsername);
+  const response = await fetch(`${API}/swapps`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -359,20 +551,34 @@ async function sendSwapp(toUsername) {
     }),
   });
 
-  alert("Swapp sent!");
-  await loadSwapps();
-  renderNotebooks();
+  if (!response.ok) {
+    throw new Error("Failed to send swap request");
+  }
+
+  return response.json();
 }
 
 async function respondSwapp(id, status) {
-  await fetch(`${API}/swapps/${id}/respond`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ status }),
-  });
+  try {
+    const response = await fetch(`${API}/swapps/${id}/respond`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
 
-  await loadSwapps();
-  if (currentFilter === "requests") renderNotebooks();
+    if (!response.ok) {
+      throw new Error("Failed to respond to swap");
+    }
+
+    const actionText = status === "accepted" ? "accepted" : "denied";
+    showToast(`Swap request ${actionText}!`);
+
+    await loadSwapps();
+    if (currentFilter === "requests") renderNotebooks();
+  } catch (err) {
+    showToast("Failed to process request");
+    console.error(err);
+  }
 }
 
 // ─── PROFILE PANEL ──────────────────────────────────────
@@ -391,11 +597,11 @@ async function openProfilePanel() {
     document.getElementById("profilePortfolioCount").textContent =
       profile.portfolios.length;
 
-    // FIX: populate SWAPP count if element exists
+    // Populate SWAPP count
     const swappCountEl = document.getElementById("profileSwappCount");
     if (swappCountEl) swappCountEl.textContent = profile.matches?.length || 0;
 
-    // FIX: populate initials for avatar
+    // Populate initials for avatar
     const initialsEl = document.getElementById("profileInitials");
     if (initialsEl && profile.name) {
       initialsEl.textContent = profile.name
@@ -404,6 +610,36 @@ async function openProfilePanel() {
         .join("")
         .toUpperCase()
         .slice(0, 2);
+    }
+
+    // ✅ Trust Score Display with dynamic coloring
+    const trustScoreValue = profile.trustScore ?? "100%";
+    const trustScoreEl = document.getElementById("profileTrustScore");
+    if (trustScoreEl) {
+      trustScoreEl.textContent = trustScoreValue;
+
+      // Dynamic color based on score
+      const numericScore = parseInt(trustScoreValue);
+      trustScoreEl.classList.remove(
+        "text-green-500",
+        "dark:text-green-400",
+        "text-yellow-500",
+        "dark:text-yellow-400",
+        "text-red-500",
+        "dark:text-red-400",
+        "text-purple-700",
+        "dark:text-purple-300",
+      );
+
+      if (numericScore >= 95) {
+        trustScoreEl.classList.add("text-green-500", "dark:text-green-400");
+      } else if (numericScore >= 85) {
+        trustScoreEl.classList.add("text-yellow-500", "dark:text-yellow-400");
+      } else if (numericScore >= 70) {
+        trustScoreEl.classList.add("text-red-500", "dark:text-red-400");
+      } else {
+        trustScoreEl.classList.add("text-purple-700", "dark:text-purple-300");
+      }
     }
 
     const list = document.getElementById("profilePortfolioList");
@@ -428,6 +664,9 @@ async function openProfilePanel() {
 
     document.getElementById("profilePanel").classList.add("open");
     document.getElementById("profileOverlay").classList.add("active");
+
+    // FIX: Reinitialize icons after profile panel opens
+    setTimeout(() => lucide.createIcons(), 100);
   } catch (err) {
     console.error("Failed to load profile:", err);
   }
@@ -441,10 +680,33 @@ function closeProfilePanel() {
 // ─── MODAL ──────────────────────────────────────────────
 function openAddModal() {
   document.getElementById("addModal").classList.remove("hidden");
+  // FIX: Reinitialize icons when modal opens
+  setTimeout(() => lucide.createIcons(), 100);
 }
 
 function closeAddModal(e) {
   if (!e || e.target.id === "addModal") {
     document.getElementById("addModal").classList.add("hidden");
   }
+}
+
+// ─── TOAST HELPER ───────────────────────────────────────
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.className =
+    "toast fixed bottom-24 right-6 bg-purple-600 text-white px-4 py-3 rounded-lg shadow-lg text-sm font-medium z-50 transition-all duration-300";
+  toast.style.display = "block";
+  toast.style.opacity = "1";
+  toast.style.transform = "translateY(0)";
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(10px)";
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, 300);
+  }, 3000);
 }

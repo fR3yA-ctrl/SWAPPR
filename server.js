@@ -253,24 +253,61 @@ app.get("/api/portfolios/recent", (req, res) => {
 });
 
 app.post("/api/portfolios", (req, res) => {
-  const { title, description, department, author, fileUrl } = req.body;
-  db.get(`SELECT id FROM Users WHERE username=?`, [author], (err, user) => {
-    if (!user) return res.json({ success: false, message: "User not found" });
-    db.run(
-      `INSERT INTO Notebooks (title, description, department, author_id, file_url) VALUES (?,?,?,?,?)`,
-      [
-        title,
-        description || null,
-        department || null,
-        user.id,
-        fileUrl || null,
-      ],
-      function (err) {
-        if (err) return res.json({ success: false, message: err.message });
-        res.json({ success: true, id: this.lastID });
-      },
-    );
-  });
+  console.log("[CREATE NOTEBOOK]", req.body);
+
+  const { title, description, department, author, username, fileUrl } =
+    req.body;
+  const actualAuthor = author || username;
+
+  if (!title || !actualAuthor) {
+    return res.status(400).json({
+      success: false,
+      message: "Title and author are required",
+    });
+  }
+
+  db.get(
+    `SELECT id FROM Users WHERE username=?`,
+    [actualAuthor],
+    (err, user) => {
+      if (err) {
+        console.error("DB error:", err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Database error" });
+      }
+
+      if (!user) {
+        console.log("User not found:", actualAuthor);
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
+
+      db.run(
+        `INSERT INTO Notebooks (title, description, department, author_id, file_url)
+       VALUES (?,?,?,?,?)`,
+        [
+          title,
+          description || null,
+          department || null,
+          user.id,
+          fileUrl || null,
+        ],
+        function (err) {
+          if (err) {
+            console.error("Insert error:", err);
+            return res
+              .status(500)
+              .json({ success: false, message: err.message });
+          }
+
+          console.log("Notebook created with ID:", this.lastID);
+          res.json({ success: true, id: this.lastID });
+        },
+      );
+    },
+  );
 });
 
 app.put("/api/portfolios/:id", (req, res) => {

@@ -182,227 +182,138 @@
   </head>
 
   <body
-    class="bg-pattern dark:bg-pattern min-h-screen flex items-center justify-center transition-colors duration-300"
+    class="bg-pattern dark:bg-pattern min-h-screen transition-colors duration-300"
   >
+    <!-- THEME BUTTON -->
     <button
       id="themeToggle"
-      class="fixed top-4 right-4 w-9 h-9 rounded-full shadow-sm flex items-center justify-content text-base transition hover:scale-110 border bg-white dark:bg-[#110e20] border-[#ddd6fe] dark:border-white/[0.06]"
+      class="fixed top-4 right-4 w-9 h-9 rounded-full shadow-sm flex items-center justify-center text-base transition hover:scale-110 border bg-white dark:bg-[#110e20] border-[#ddd6fe] dark:border-white/[0.06]"
     >
       🌙
     </button>
 
+    <!-- LOGO TOP LEFT -->
+    <div class="absolute top-6 left-8 flex items-center gap-2">
+      <img src="Images/swappr_logo.jpg" class="w-8 h-8 object-contain" />
+      <span class="text-lg font-bold text-purple-800 dark:text-purple-300">
+        SWAPPR
+      </span>
+    </div>
+
+    <!-- MAIN CONTAINER -->
     <div
-      class="fade-up bg-white dark:bg-[#110e20] rounded-2xl p-8 w-full max-w-sm card-shadow transition-colors duration-300"
+      class="min-h-screen flex flex-col md:flex-row items-center justify-center px-6"
     >
-      <!-- Logo -->
-      <div class="text-center mb-7">
-        <div class="flex items-center justify-center gap-2 mb-1">
-          <span class="text-2xl">⇄</span>
+      <!-- LEFT SIDE -->
+      <div
+        class="w-full md:w-1/2 flex flex-col justify-center md:pl-20 mb-10 md:mb-0"
+      >
+        <div class="flex items-center gap-3 mb-4">
+          <img
+            src="Images/swappr_logo.jpg"
+            class="w-12 h-12 object-contain drop-shadow-lg"
+          />
           <h1
-            class="text-2xl font-extrabold tracking-tight text-purple-800 dark:text-purple-300"
-            style="
-              text-shadow:
-                0 0 8px rgba(167, 139, 250, 0.8),
-                0 0 20px rgba(124, 58, 237, 0.5);
-            "
+            class="text-4xl font-extrabold text-purple-800 dark:text-purple-300"
           >
             SWAPPR
           </h1>
         </div>
+
         <p
-          class="text-xs font-semibold tracking-widest uppercase"
-          style="color: #9b8ec4"
+          class="text-xl text-gray-700 dark:text-gray-300 max-w-md leading-relaxed"
         >
-          Student Skill Exchange
+          Get the notes you need by sharing what you know. Connect with students
+          who complement your strengths.
         </p>
-      </div>
 
-      <!-- Tabs -->
-      <div class="tab-bar flex gap-1 p-1 mb-6">
-        <button
-          class="tab-btn active"
-          id="loginTab"
-          onclick="switchTab('login')"
+        <div
+          class="mt-8 space-y-2 text-sm text-purple-700 dark:text-purple-300"
         >
-          Login
-        </button>
-        <button
-          class="tab-btn"
-          id="registerTab"
-          onclick="switchTab('register')"
-        >
-          Register
-        </button>
-      </div>
-
-      <!-- Login Form -->
-      <div id="loginForm">
-        <div class="space-y-4">
-          <div>
-            <label
-              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
-              style="color: #9b8ec4"
-              >Username</label
-            >
-            <input
-              type="text"
-              id="loginUsername"
-              class="input-field"
-              placeholder="Enter your username"
-            />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
-              style="color: #9b8ec4"
-              >Password</label
-            >
-            <input
-              type="password"
-              id="loginPassword"
-              class="input-field"
-              placeholder="Enter your password"
-            />
-          </div>
-          <p id="loginError" class="error-msg">Invalid username or password.</p>
-          <button class="btn-primary mt-1" onclick="handleLogin()">
-            Login →
-          </button>
+          <p>📘 Trade notes instantly</p>
+          <p>🤝 Find your academic match</p>
+          <p>🚀 Boost your grades together</p>
         </div>
       </div>
 
-      <!-- Register Form -->
-      <div id="registerForm" class="hidden">
-        <div class="space-y-4">
-          <div>
-            <label
-              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
-              style="color: #9b8ec4"
-              >Full Name</label
+      <!-- RIGHT SIDE -->
+      <div class="w-full md:w-1/2 flex justify-center">
+        <div
+          class="fade-up bg-white dark:bg-[#110e20] rounded-2xl p-8 w-full max-w-sm card-shadow transition-colors duration-300"
+        >
+          <div class="tab-bar flex p-1 mb-6">
+            <button
+              id="loginTab"
+              class="tab-btn active"
+              onclick="switchTab('login')"
             >
+              Login
+            </button>
+            <button
+              id="registerTab"
+              class="tab-btn"
+              onclick="switchTab('register')"
+            >
+              Register
+            </button>
+          </div>
+
+          <div id="loginForm">
+            <input
+              type="text"
+              id="loginUsername"
+              placeholder="Username"
+              class="input-field mb-4"
+            />
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Password"
+              class="input-field mb-4"
+            />
+            <button class="btn-primary" onclick="handleLogin()">Login</button>
+            <div id="loginError" class="error-msg text-center"></div>
+          </div>
+
+          <div id="registerForm" class="hidden">
             <input
               type="text"
               id="regName"
-              class="input-field"
-              placeholder="Enter full name"
+              placeholder="Full Name"
+              class="input-field mb-3"
             />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
-              style="color: #9b8ec4"
-              >Student ID</label
-            >
             <input
               type="text"
               id="regStudentId"
-              class="input-field"
-              placeholder="e.g. 12345678"
-              inputmode="numeric"
-              pattern="[0-9]*"
-              maxlength="12"
+              placeholder="Student ID"
+              class="input-field mb-3"
             />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
-              style="color: #9b8ec4"
-              >Course / Program</label
-            >
-            <select id="regCourse" class="input-field">
-              <option value="">Select your course</option>
-              <option value="BS Accountancy">BS Accountancy</option>
-              <option value="BS Architecture">BS Architecture</option>
-              <option value="BS Biology">BS Biology</option>
-              <option value="BS Business Administration">
-                BS Business Administration
-              </option>
-              <option value="BS Chemical Engineering">
-                BS Chemical Engineering
-              </option>
-              <option value="BS Chemistry">BS Chemistry</option>
-              <option value="BS Civil Engineering">BS Civil Engineering</option>
-              <option value="BS Communication">BS Communication</option>
-              <option value="BS Computer Engineering">
-                BS Computer Engineering
-              </option>
-              <option value="BS Computer Science">BS Computer Science</option>
-              <option value="BS Economics">BS Economics</option>
-              <option value="BS Electrical Engineering">
-                BS Electrical Engineering
-              </option>
-              <option value="BS Electronics Engineering">
-                BS Electronics Engineering
-              </option>
-              <option value="BS Fine Arts">BS Fine Arts</option>
-              <option value="BS Hospitality Management">
-                BS Hospitality Management
-              </option>
-              <option value="BS Industrial Engineering">
-                BS Industrial Engineering
-              </option>
-              <option value="BS Information Technology">
-                BS Information Technology
-              </option>
-              <option value="BS Mathematics">BS Mathematics</option>
-              <option value="BS Mechanical Engineering">
-                BS Mechanical Engineering
-              </option>
-              <option value="BS Nursing">BS Nursing</option>
-              <option value="BS Nutrition and Dietetics">
-                BS Nutrition and Dietetics
-              </option>
-              <option value="BS Pharmacy">BS Pharmacy</option>
-              <option value="BS Physics">BS Physics</option>
-              <option value="BS Political Science">BS Political Science</option>
-              <option value="BS Psychology">BS Psychology</option>
-              <option value="AB Anthropology">AB Anthropology</option>
-              <option value="AB History">AB History</option>
-              <option value="AB Literature">AB Literature</option>
-              <option value="AB Philosophy">AB Philosophy</option>
-              <option value="AB Sociology">AB Sociology</option>
-              <option value="JD Law">JD Law</option>
-              <option value="Bachelor of Secondary Education">
-                Bachelor of Secondary Education
-              </option>
-              <option value="Bachelor of Elementary Education">
-                Bachelor of Elementary Education
-              </option>
-            </select>
-          </div>
-          <div>
-            <label
-              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
-              style="color: #9b8ec4"
-              >Username</label
-            >
+            <input
+              type="text"
+              id="regCourse"
+              placeholder="Course"
+              class="input-field mb-3"
+            />
             <input
               type="text"
               id="regUsername"
-              class="input-field"
-              placeholder="Enter username"
+              placeholder="Username"
+              class="input-field mb-3"
             />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-bold mb-1.5 uppercase tracking-wider"
-              style="color: #9b8ec4"
-              >Password</label
-            >
             <input
               type="password"
               id="regPassword"
-              class="input-field"
-              placeholder="Enter password"
+              placeholder="Password"
+              class="input-field mb-4"
             />
+            <button class="btn-primary" onclick="handleRegister()">
+              Register
+            </button>
+            <div id="registerError" class="error-msg text-center"></div>
+            <div id="registerSuccess" class="success-msg text-center">
+              Registration successful!
+            </div>
           </div>
-          <p id="registerError" class="error-msg"></p>
-          <p id="registerSuccess" class="success-msg">
-            Account created! You can now log in.
-          </p>
-          <button class="btn-primary mt-1" onclick="handleRegister()">
-            Create Account →
-          </button>
         </div>
       </div>
     </div>
