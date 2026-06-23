@@ -174,15 +174,21 @@ app.get("/api/profile/:username", (req, res) => {
             [user.id, user.id, user.id],
             (err, matchRows) => {
               const matches = (matchRows || []).map((r) => r.matched_user);
+              const profile = {
+                id: user.id,
+                name: user.name,
+                username: user.username,
+                bio: user.bio,
+                course: user.course || user.department || "",
+                department: user.department || user.course || "",
+                yearLevel: user.yearLevel || "",
+                studentId: user.yearLevel || "",
+                portfolios: notebooks,
+                matches,
+              };
               res.json({
                 success: true,
-                profile: {
-                  ...user,
-                  course: user.course || user.department || "",
-                  department: user.department || user.course || "",
-                  portfolios: notebooks,
-                  matches,
-                },
+                profile,
               });
             },
           );

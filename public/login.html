@@ -169,15 +169,169 @@
                 required
               />
             </div>
-            <input
-              type="text"
-              id="regCourse"
-              placeholder="Course"
-              class="input-field"
-              style="margin-bottom: 12px"
-              autocomplete="off"
-              required
-            />
+            <div class="custom-select-wrapper" style="position: relative; width: 100%; margin-bottom: 1rem;">
+              <select id="regCourse" class="input-field" style="display: none;" required>
+                <option value="">Select your course</option>
+                <optgroup label="School of Architecture, Fine Arts, and Design">
+                  <option value="Bachelor of Science in Architecture">
+                    Bachelor of Science in Architecture
+                  </option>
+                  <option value="Bachelor of Landscape Architecture">
+                    Bachelor of Landscape Architecture
+                  </option>
+                  <option value="Bachelor of Science in Interior Design">
+                    Bachelor of Science in Interior Design
+                  </option>
+                  <option value="Bachelor of Fine Arts major in Advertising Arts">
+                    Bachelor of Fine Arts major in Advertising Arts
+                  </option>
+                  <option value="Bachelor of Fine Arts major in Cinema">
+                    Bachelor of Fine Arts major in Cinema
+                  </option>
+                </optgroup>
+                <optgroup label="School of Arts and Sciences">
+                  <option value="Bachelor of Arts in Anthropology">
+                    Bachelor of Arts in Anthropology
+                  </option>
+                  <option value="Bachelor of Science in Biology">
+                    Bachelor of Science in Biology
+                  </option>
+                  <option value="Bachelor of Science in Marine Biology">
+                    Bachelor of Science in Marine Biology
+                  </option>
+                  <option value="Bachelor of Science in Chemistry">
+                    Bachelor of Science in Chemistry
+                  </option>
+                  <option value="Bachelor of Arts in English Language Studies">
+                    Bachelor of Arts in English Language Studies
+                  </option>
+                  <option value="Bachelor of Arts in Literary and Cultural Studies with Creative Writing">
+                    Bachelor of Arts in Literary and Cultural Studies with Creative Writing
+                  </option>
+                  <option value="Bachelor of Arts in Communication major in Media">
+                    Bachelor of Arts in Communication major in Media
+                  </option>
+                  <option value="Bachelor of Science in Computer Science">
+                    Bachelor of Science in Computer Science
+                  </option>
+                  <option value="Bachelor of Science in Information Systems">
+                    Bachelor of Science in Information Systems
+                  </option>
+                  <option value="Bachelor of Science in Information Technology">
+                    Bachelor of Science in Information Technology
+                  </option>
+                  <option value="Bachelor of Science in Data Science">
+                    Bachelor of Science in Data Science
+                  </option>
+                  <option value="Bachelor of Philosophy">Bachelor of Philosophy</option>
+                  <option value="Bachelor of Science in Applied Physics">
+                    Bachelor of Science in Applied Physics
+                  </option>
+                  <option value="Bachelor of Science in Psychology">
+                    Bachelor of Science in Psychology
+                  </option>
+                </optgroup>
+                <optgroup label="School of Business and Economics">
+                  <option value="Bachelor of Science in Business Administration major in Financial Management">
+                    Bachelor of Science in Business Administration major in Financial Management
+                  </option>
+                  <option value="Bachelor of Science in Business Administration major in Human Resource Management">
+                    Bachelor of Science in Business Administration major in Human Resource Management
+                  </option>
+                  <option value="Bachelor of Science in Business Administration major in Marketing Management">
+                    Bachelor of Science in Business Administration major in Marketing Management
+                  </option>
+                  <option value="Bachelor of Science in Business Administration major in Operations Management">
+                    Bachelor of Science in Business Administration major in Operations Management
+                  </option>
+                  <option value="Bachelor of Science in Management Accounting">
+                    Bachelor of Science in Management Accounting
+                  </option>
+                  <option value="Bachelor of Science in Internal Auditing">
+                    Bachelor of Science in Internal Auditing
+                  </option>
+                  <option value="Bachelor of Science in Entrepreneurship">
+                    Bachelor of Science in Entrepreneurship
+                  </option>
+                  <option value="Bachelor of Science in Economics">
+                    Bachelor of Science in Economics
+                  </option>
+                  <option value="Bachelor of Science in Hospitality Management">
+                    Bachelor of Science in Hospitality Management
+                  </option>
+                  <option value="Bachelor of Science in Tourism Management">
+                    Bachelor of Science in Tourism Management
+                  </option>
+                  <option value="Diploma in Culinary Arts">
+                    Diploma in Culinary Arts
+                  </option>
+                </optgroup>
+                <optgroup label="School of Education">
+                  <option value="Bachelor of Secondary Education major in Science">
+                    Bachelor of Secondary Education major in Science
+                  </option>
+                  <option value="Bachelor of Secondary Education major in Mathematics">
+                    Bachelor of Secondary Education major in Mathematics
+                  </option>
+                  <option value="Bachelor of Special Needs Education specialization in Early Childhood Education-Montessori Education">
+                    Bachelor of Special Needs Education specialization in Early Childhood Education-Montessori Education
+                  </option>
+                </optgroup>
+                <optgroup label="School of Engineering">
+                  <option value="Bachelor of Science in Chemical Engineering">
+                    Bachelor of Science in Chemical Engineering
+                  </option>
+                  <option value="Bachelor of Science in Civil Engineering">
+                    Bachelor of Science in Civil Engineering
+                  </option>
+                  <option value="Bachelor of Science in Computer Engineering">
+                    Bachelor of Science in Computer Engineering
+                  </option>
+                  <option value="Bachelor of Science in Electrical Engineering">
+                    Bachelor of Science in Electrical Engineering
+                  </option>
+                  <option value="Bachelor of Science in Electronics Engineering">
+                    Bachelor of Science in Electronics Engineering
+                  </option>
+                  <option value="Bachelor of Science in Industrial Engineering">
+                    Bachelor of Science in Industrial Engineering
+                  </option>
+                  <option value="Bachelor of Science in Mechanical Engineering">
+                    Bachelor of Science in Mechanical Engineering
+                  </option>
+                </optgroup>
+                <optgroup label="School of Health Care Professions">
+                  <option value="Bachelor of Science in Nursing">
+                    Bachelor of Science in Nursing
+                  </option>
+                  <option value="Bachelor of Science in Nutrition and Dietetics">
+                    Bachelor of Science in Nutrition and Dietetics
+                  </option>
+                  <option value="Bachelor of Science in Pharmacy">
+                    Bachelor of Science in Pharmacy
+                  </option>
+                </optgroup>
+                <optgroup label="School of Law and Governance">
+                  <option value="Bachelor of Arts in Political Science major in International Relations and Foreign Service">
+                    Bachelor of Arts in Political Science major in International Relations and Foreign Service
+                  </option>
+                  <option value="Bachelor of Arts in Political Science major in Law and Policy Studies">
+                    Bachelor of Arts in Political Science major in Law and Policy Studies
+                  </option>
+                </optgroup>
+              </select>
+              <button
+                type="button"
+                id="regCourseButton"
+                class="input-field custom-select-button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+              >
+                <span class="custom-select-label">Select your school</span>
+                <span class="custom-select-icon">▾</span>
+              </button>
+              <div id="regCourseList" class="custom-select-list hidden" role="listbox" tabindex="0"></div>
+            </div>
             <input
               type="text"
               id="regUsername"
@@ -213,6 +367,342 @@
         window.location.href = "index.html";
       }
 
+      // Custom dropdown for regCourse with click-open typing support
+      (function () {
+        const courseSelect = document.getElementById("regCourse");
+        const courseButton = document.getElementById("regCourseButton");
+        const courseList = document.getElementById("regCourseList");
+        if (!courseSelect || !courseButton || !courseList) return;
+
+        const topLevelOptions = Array.from(courseSelect.children)
+          .filter((child) => child.tagName.toLowerCase() === "option")
+          .filter((opt) => opt.value)
+          .map((opt) => ({
+            value: opt.value,
+            label: opt.textContent.trim(),
+            normalized: opt.textContent.trim().toLowerCase(),
+          }));
+
+        const groups = Array.from(courseSelect.querySelectorAll("optgroup")).map(
+          (group) => ({
+            label: group.label,
+            options: Array.from(group.querySelectorAll("option"))
+              .filter((opt) => opt.value)
+              .map((opt) => ({
+                value: opt.value,
+                label: opt.textContent.trim(),
+                normalized: opt.textContent.trim().toLowerCase(),
+              })),
+          })
+        );
+
+        const options = [...topLevelOptions, ...groups.flatMap((group) => group.options)];
+
+        let isOpen = false;
+        let highlightedIndex = -1;
+        let typeBuffer = "";
+        let bufferTimer = null;
+        const MIN_TYPE_MATCH_LENGTH = 3;
+
+        const clearTypeBuffer = () => {
+          typeBuffer = "";
+          if (bufferTimer) {
+            clearTimeout(bufferTimer);
+            bufferTimer = null;
+          }
+        };
+
+        const scheduleTypeBufferClear = () => {
+          if (bufferTimer) {
+            clearTimeout(bufferTimer);
+          }
+          bufferTimer = setTimeout(clearTypeBuffer, 1000);
+        };
+
+        const updateButtonLabel = () => {
+          const selected = options.find((opt) => opt.value === courseSelect.value);
+          const labelText = selected ? selected.label : "Select your school";
+          const textSpan = courseButton.querySelector(".custom-select-label");
+          if (textSpan) {
+            textSpan.textContent = labelText;
+          } else {
+            courseButton.textContent = labelText;
+          }
+        };
+
+        const highlightOption = (index, scrollIntoView = false) => {
+          const items = Array.from(courseList.querySelectorAll(".custom-select-option"));
+          if (!items.length) return;
+
+          if (index < 0) index = 0;
+          if (index >= items.length) index = items.length - 1;
+
+          highlightedIndex = index;
+          items.forEach((item, idx) => {
+            const isActive = idx === highlightedIndex;
+            item.classList.toggle("highlighted", isActive);
+            item.setAttribute("aria-selected", isActive ? "true" : "false");
+            if (isActive && scrollIntoView) {
+              const itemRect = item.getBoundingClientRect();
+              const listRect = courseList.getBoundingClientRect();
+              if (itemRect.top < listRect.top || itemRect.bottom > listRect.bottom) {
+                item.scrollIntoView({ block: "nearest" });
+              }
+            }
+          });
+        };
+
+        const openList = () => {
+          if (isOpen) return;
+          isOpen = true;
+          courseList.classList.remove("hidden");
+          courseButton.setAttribute("aria-expanded", "true");
+          courseButton.classList.add("open");
+          const selectedIndex = options.findIndex((opt) => opt.value === courseSelect.value);
+          highlightOption(selectedIndex >= 0 ? selectedIndex : 0);
+          courseList.focus();
+        };
+
+        const closeList = () => {
+          if (!isOpen) return;
+          isOpen = false;
+          courseList.classList.add("hidden");
+          courseButton.setAttribute("aria-expanded", "false");
+          courseButton.classList.remove("open");
+          clearTypeBuffer();
+        };
+
+        const setSelected = (value) => {
+          courseSelect.value = value;
+          updateButtonLabel();
+        };
+
+        const findMatch = (query) => {
+          const normalized = query.trim().toLowerCase();
+          if (!normalized) return null;
+
+          const terms = normalized.split(/\s+/).filter(Boolean);
+          const candidates = options
+            .map((opt) => {
+              const normalizedLabel = opt.normalized;
+              const words = normalizedLabel.split(/\s+/);
+              const startsWith = normalizedLabel.startsWith(normalized);
+              const wordStartIndex = words.findIndex((word) => word.startsWith(normalized));
+              const containsAll = terms.every((term) => normalizedLabel.includes(term));
+
+              let score = 0;
+              if (startsWith) {
+                score = 200000 - normalizedLabel.length;
+              } else if (wordStartIndex >= 0) {
+                score = 100000 - wordStartIndex * 10 - words[wordStartIndex].length;
+              } else if (terms.length >= 3 && containsAll) {
+                score = 50000 - normalizedLabel.length;
+              }
+
+              return { opt, score, wordStartIndex };
+            })
+            .filter((item) => item.score > 0);
+
+          if (!candidates.length) return null;
+          candidates.sort((a, b) => b.score - a.score);
+          return candidates[0].opt;
+        };
+
+        const handleType = (key) => {
+          typeBuffer += key.toLowerCase();
+          scheduleTypeBufferClear();
+          if (typeBuffer.length < MIN_TYPE_MATCH_LENGTH) {
+            return;
+          }
+          const match = findMatch(typeBuffer);
+          if (match) {
+            const matchIndex = options.findIndex((opt) => opt.value === match.value);
+            highlightOption(matchIndex, true);
+          }
+        };
+
+        const handleKeyDown = (event) => {
+          if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+          if (event.key === "Escape") {
+            event.preventDefault();
+            closeList();
+            courseButton.focus();
+            return;
+          }
+
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            if (!isOpen) {
+              openList();
+              return;
+            }
+            highlightOption(highlightedIndex + 1, true);
+            return;
+          }
+
+          if (event.key === "ArrowUp") {
+            event.preventDefault();
+            if (!isOpen) {
+              openList();
+              return;
+            }
+            highlightOption(highlightedIndex - 1, true);
+            return;
+          }
+
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            if (!isOpen) {
+              openList();
+              return;
+            }
+            if (highlightedIndex >= 0) {
+              setSelected(options[highlightedIndex].value);
+            }
+            closeList();
+            courseButton.focus();
+            return;
+          }
+
+          if (event.key === "Backspace") {
+            event.preventDefault();
+            if (typeBuffer.length > 0) {
+              typeBuffer = typeBuffer.slice(0, -1);
+              scheduleTypeBufferClear();
+              if (typeBuffer.length >= MIN_TYPE_MATCH_LENGTH) {
+                const match = findMatch(typeBuffer);
+                if (match) {
+                  const matchIndex = options.findIndex((opt) => opt.value === match.value);
+                  highlightOption(matchIndex, true);
+                }
+              }
+            }
+            return;
+          }
+
+          if (event.key.length === 1) {
+            event.preventDefault();
+            if (!isOpen) {
+              openList();
+            }
+            handleType(event.key);
+          }
+        };
+
+        const renderOptions = () => {
+          courseList.innerHTML = "";
+          let optionIndex = 0;
+
+          if (topLevelOptions.length) {
+            topLevelOptions.forEach((option) => {
+              const currentIndex = optionIndex;
+              const optionEl = document.createElement("div");
+              optionEl.id = `regCourseOption${currentIndex}`;
+              optionEl.className = "custom-select-option";
+              optionEl.setAttribute("role", "option");
+              optionEl.setAttribute("aria-selected", "false");
+              optionEl.dataset.value = option.value;
+              optionEl.textContent = option.label;
+
+              optionEl.addEventListener("click", () => {
+                setSelected(option.value);
+                closeList();
+                courseButton.focus();
+              });
+
+              optionEl.addEventListener("mousemove", () => {
+                highlightOption(currentIndex);
+              });
+
+              courseList.appendChild(optionEl);
+              optionIndex += 1;
+            });
+          }
+
+          groups.forEach((group) => {
+            if (group.label) {
+              const header = document.createElement("div");
+              header.className = "custom-select-group";
+              header.textContent = group.label;
+              header.setAttribute("role", "presentation");
+              courseList.appendChild(header);
+            }
+
+            group.options.forEach((option) => {
+              const currentIndex = optionIndex;
+              const optionEl = document.createElement("div");
+              optionEl.id = `regCourseOption${currentIndex}`;
+              optionEl.className = "custom-select-option";
+              optionEl.setAttribute("role", "option");
+              optionEl.setAttribute("aria-selected", "false");
+              optionEl.dataset.value = option.value;
+              optionEl.textContent = option.label;
+
+              optionEl.addEventListener("click", () => {
+                setSelected(option.value);
+                closeList();
+                courseButton.focus();
+              });
+
+              optionEl.addEventListener("mousemove", () => {
+                highlightOption(currentIndex);
+              });
+
+              courseList.appendChild(optionEl);
+              optionIndex += 1;
+            });
+          });
+        };
+
+        renderOptions();
+        updateButtonLabel();
+
+        courseButton.addEventListener("click", () => {
+          toggleList();
+        });
+
+        document.addEventListener(
+          "keydown",
+          (event) => {
+            if (!isOpen) return;
+            if (event.ctrlKey || event.metaKey || event.altKey) return;
+            const ignoredTags = ["INPUT", "TEXTAREA", "SELECT"];
+            if (ignoredTags.includes(event.target.tagName)) return;
+            handleKeyDown(event);
+          },
+          true
+        );
+
+        courseList.addEventListener("click", (event) => {
+          const clicked = event.target.closest(".custom-select-option");
+          if (!clicked) return;
+          const value = clicked.dataset.value;
+          if (value) {
+            setSelected(value);
+          }
+          closeList();
+          courseButton.focus();
+        });
+
+        document.addEventListener("click", (event) => {
+          if (
+            !courseList.contains(event.target) &&
+            !courseButton.contains(event.target)
+          ) {
+            closeList();
+          }
+        });
+
+        function toggleList() {
+          if (isOpen) {
+            closeList();
+          } else {
+            openList();
+          }
+        }
+      })();
+
       // Modal functions
       function openRegisterModal() {
         const modal = document.getElementById("registerModal");
@@ -221,6 +711,12 @@
         document.getElementById("registerSuccess").style.display = "none";
         // Clear form
         document.getElementById("registerForm").reset();
+
+        // Focus the course button so custom type-to-select works immediately.
+        requestAnimationFrame(() => {
+          const courseButton = document.getElementById("regCourseButton");
+          if (courseButton) courseButton.focus();
+        });
 
         // Reinitialize icons after modal opens
         setTimeout(() => lucide.createIcons(), 50);

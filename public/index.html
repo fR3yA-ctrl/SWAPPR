@@ -155,7 +155,7 @@
               class="sidebar-link active flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
             >
               <i data-lucide="book-open" class="w-4 h-4"></i>
-              All Notebooks
+              All Subjects
             </a>
             <a
               href="#"
@@ -167,7 +167,7 @@
               class="sidebar-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
             >
               <i data-lucide="notebook" class="w-4 h-4"></i>
-              My Notebooks
+              My Subjects
             </a>
             <a
               href="#"
@@ -210,7 +210,7 @@
               class="sidebar-link flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition"
             >
               <i data-lucide="trophy" class="w-4 h-4"></i>
-              Top Contributors
+              Top Subjects
             </a>
 
             <a
@@ -226,6 +226,22 @@
               Recently Added
             </a>
           </nav>
+        </div>
+
+        <div class="space-y-6 mt-6">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest mb-3 px-2 text-purple-300 dark:text-purple-400">
+              Top Contributors
+            </p>
+            <div id="sidebarTop" class="space-y-2 text-sm text-gray-700 dark:text-gray-300"></div>
+          </div>
+
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest mb-3 px-2 text-purple-300 dark:text-purple-400">
+              Recently Added
+            </p>
+            <div id="sidebarRecent" class="space-y-2 text-sm text-gray-700 dark:text-gray-300"></div>
+          </div>
         </div>
 
         <div
@@ -245,11 +261,20 @@
                 id="sectionTitle"
                 class="text-3xl font-extrabold text-gray-800 dark:text-purple-100"
               >
-                All Notebooks
+                All Subjects
               </h2>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Discover and exchange study materials
+              <p id="sectionSubtitle" class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Browse shared subjects and study resources in a Reddit-style feed.
               </p>
+            </div>
+            <div>
+              <button
+                id="backToSubjectsBtn"
+                onclick="resetSubjects()"
+                class="hidden text-sm font-semibold px-4 py-2 rounded-full bg-white/90 text-purple-700 hover:bg-white transition"
+              >
+                ← Back to Subjects
+              </button>
             </div>
 
             <!-- Search Bar -->
@@ -257,15 +282,15 @@
               <input
                 type="text"
                 id="searchInput"
-                placeholder="Search notebooks or users..."
+                placeholder="Search subjects or users..."
                 class="w-full px-4 py-2.5 rounded-xl border-2 border-purple-200 dark:border-purple-500/30 bg-white dark:bg-[#1a1432] focus:border-purple-500 dark:focus:border-purple-400 outline-none transition text-sm"
               />
             </div>
           </div>
 
-          <!-- Notebooks Grid -->
-          <div id="notebookGrid" class="notebooks-grid">
-            <!-- Notebooks will be dynamically inserted here -->
+          <!-- Subjects Feed -->
+          <div id="notebookGrid" class="subjects-list">
+            <!-- Subjects will be dynamically inserted here -->
             <div class="col-span-full text-center py-12">
               <div
                 class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-200 border-t-purple-600"
@@ -275,6 +300,7 @@
               </p>
             </div>
           </div>
+          <div id="paginationControls" class="pagination hidden"></div>
         </div>
       </main>
     </div>
@@ -498,7 +524,7 @@
             >
               Cancel
             </button>
-            <button onclick="submitPortfolio()" class="btn-primary">
+            <button id="portfolioActionBtn" onclick="submitPortfolio()" class="btn-primary">
               Publish Notebook
             </button>
           </div>

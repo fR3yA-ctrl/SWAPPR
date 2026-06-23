@@ -546,6 +546,32 @@
             <label class="field-section-label">Course / Program</label>
             <select id="editCourse" class="input-field">
               <option value="">Select your course</option>
+              <option value="AB Anthropology">AB Anthropology</option>
+              <option value="AB History">AB History</option>
+              <option value="AB Literature">AB Literature</option>
+              <option value="AB Philosophy">AB Philosophy</option>
+              <option value="AB Sociology">AB Sociology</option>
+              <option value="Bachelor of Elementary Education">
+                Bachelor of Elementary Education
+              </option>
+              <option value="Bachelor of Fine Arts in Advertising Arts">
+                Bachelor of Fine Arts in Advertising Arts
+              </option>
+              <option value="Bachelor of Fine Arts major in Cinema">
+                Bachelor of Fine Arts major in Cinema
+              </option>
+              <option value="Bachelor of Landscape Architecture">
+                Bachelor of Landscape Architecture
+              </option>
+              <option value="Bachelor of Secondary Education">
+                Bachelor of Secondary Education
+              </option>
+              <option value="Bachelor of Science in Architecture">
+                Bachelor of Science in Architecture
+              </option>
+              <option value="Bachelor of Science in Interior Design">
+                Bachelor of Science in Interior Design
+              </option>
               <option value="BS Accountancy">BS Accountancy</option>
               <option value="BS Architecture">BS Architecture</option>
               <option value="BS Biology">BS Biology</option>
@@ -591,18 +617,7 @@
               <option value="BS Physics">BS Physics</option>
               <option value="BS Political Science">BS Political Science</option>
               <option value="BS Psychology">BS Psychology</option>
-              <option value="AB Anthropology">AB Anthropology</option>
-              <option value="AB History">AB History</option>
-              <option value="AB Literature">AB Literature</option>
-              <option value="AB Philosophy">AB Philosophy</option>
-              <option value="AB Sociology">AB Sociology</option>
               <option value="JD Law">JD Law</option>
-              <option value="Bachelor of Secondary Education">
-                Bachelor of Secondary Education
-              </option>
-              <option value="Bachelor of Elementary Education">
-                Bachelor of Elementary Education
-              </option>
             </select>
           </div>
           <div>
@@ -862,8 +877,8 @@
                   isOwn
                     ? `
                   <div class="flex gap-1.5 shrink-0">
-                    <button onclick="editNotebook('${n.title}')" class="edit-btn">✏️ Edit</button>
-                    <button onclick="deleteNotebook('${n.title}')" class="delete-btn">🗑️</button>
+                    <button onclick="editNotebook(${n.id})" class="edit-btn">✏️ Edit</button>
+                    <button onclick="deleteNotebook(${n.id})" class="delete-btn">🗑️</button>
                   </div>`
                     : ""
                 }
@@ -986,18 +1001,18 @@
       }
 
       // ── Notebook actions ──────────────────────────────────────────────────────
-      function editNotebook(title) {
-        sessionStorage.setItem("editNotebook", title);
+      function editNotebook(notebookId) {
+        sessionStorage.setItem("editNotebookId", notebookId);
         window.location.href = "index.html";
       }
 
-      async function deleteNotebook(title) {
-        if (!confirm(`Delete "${title}"?`)) return;
+      async function deleteNotebook(notebookId) {
+        if (!confirm("Delete this notebook?")) return;
         try {
           const res = await fetch("/api/portfolios/delete", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, author: currentUser.username }),
+            body: JSON.stringify({ id: notebookId }),
           });
           const data = await res.json();
           if (data.success) {

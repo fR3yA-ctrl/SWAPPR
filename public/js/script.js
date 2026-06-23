@@ -4,6 +4,24 @@ let currentUser = null;
 let currentFilter = "all";
 let notebooks = [];
 let swapps = [];
+let editingNotebookId = null;
+let selectedSubject = null;
+let currentPage = 1;
+const ITEMS_PER_PAGE = 6;
+const subjects = [
+  "Computer Science",
+  "Information Technology",
+  "Electrical Engineering",
+  "Mechanical Engineering",
+  "Civil Engineering",
+  "Psychology",
+  "Economics",
+  "Biology",
+  "Nursing",
+  "Pharmacy",
+  "Political Science",
+  "Mathematics",
+];
 
 // ─── INIT ───────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
@@ -11,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadUser();
   loadNotebooks();
   loadSwapps();
+  loadSidebar();
   attachStaticEventListeners();
 });
 
@@ -56,7 +75,10 @@ function attachStaticEventListeners() {
   // Search input
   const searchInput = document.getElementById("searchInput");
   if (searchInput) {
-    searchInput.addEventListener("input", renderNotebooks);
+    searchInput.addEventListener("input", () => {
+      resetPagination();
+      renderNotebooks();
+    });
   }
 }
 
@@ -108,19 +130,210 @@ async function loadNotebooks() {
     const res = await fetch(`${API}/portfolios`);
     const data = await res.json();
     notebooks = data.portfolios || [];
+
+    const editNotebookId = sessionStorage.getItem("editNotebookId");
+    if (editNotebookId) {
+      sessionStorage.removeItem("editNotebookId");
+      const notebook = notebooks.find((n) => n.id === Number(editNotebookId));
+      if (notebook) {
+        openEditNotebookModal(notebook);
+      }
+    }
+
     renderNotebooks();
   } catch (err) {
     console.error("Failed to load notebooks:", err);
   }
 }
 
-function renderNotebooks() {
+function selectSubject(subject) {
+  selectedSubject = subject;
+  currentFilter = "all";
+  resetPagination();
+  updateSectionTitle();
+  document.getElementById("backToSubjectsBtn")?.classList.add("hidden");
+  renderNotebooks();
+}
+
+function resetSubjects() {
+  selectedSubject = null;
+  resetPagination();
+  updateSectionTitle();
+  document.getElementById("backToSubjectsBtn")?.classList.add("hidden");
+  renderNotebooks();
+}
+
+function resetPagination() {
+  currentPage = 1;
+}
+
+function getPaginatedItems(items) {
+  const totalPages = Math.max(1, Math.ceil(items.length / ITEMS_PER_PAGE));
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  return items.slice(start, start + ITEMS_PER_PAGE);
+}
+
+function changePage(page) {
+  currentPage = page;
+  renderNotebooks();
+  document
+    .getElementById("sectionTitle")
+    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderPagination(totalItems) {
+  const pagination = document.getElementById("paginationControls");
+  if (!pagination) return;
+
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  if (totalPages <= 1) {
+    pagination.innerHTML = "";
+    pagination.classList.add("hidden");
+    return;
+  }
+
+  pagination.classList.remove("hidden");
+
+  const pageButtons = Array.from({ length: totalPages }, (_, index) => {
+    const page = index + 1;
+    return `
+      <button
+        type="button"
+        class="pagination-page ${page === currentPage ? "active" : ""}"
+        data-page="${page}"
+        aria-label="Go to page ${page}"
+        ${page === currentPage ? 'aria-current="page"' : ""}
+      >
+        ${page}
+      </button>
+    `;
+  }).join("");
+
+  pagination.innerHTML = `
+    <div class="pagination-summary">
+      Page ${currentPage} of ${totalPages}
+    </div>
+    <div class="pagination-actions">
+      <button
+        type="button"
+        class="pagination-btn"
+        data-page="${currentPage - 1}"
+        ${currentPage === 1 ? "disabled" : ""}
+      >
+        Previous
+      </button>
+      <div class="pagination-pages">${pageButtons}</div>
+      <button
+        type="button"
+        class="pagination-btn"
+        data-page="${currentPage + 1}"
+        ${currentPage === totalPages ? "disabled" : ""}
+      >
+        Next
+      </button>
+    </div>
+  `;
+
+  pagination.querySelectorAll("[data-page]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const page = Number(button.dataset.page);
+      if (!button.disabled && page >= 1 && page <= totalPages) {
+        changePage(page);
+      }
+    });
+  });
+}
+
+function updateSectionTitle() {
+  const sectionTitle = document.getElementById("sectionTitle");
+  const sectionSubtitle = document.getElementById("sectionSubtitle");
+  if (!sectionTitle) return;
+  if (selectedSubject) {
+    sectionTitle.textContent = "All Notebooks";
+    if (sectionSubtitle) {
+      sectionSubtitle.textContent = "Discover and exchange study materials";
+    }
+    return;
+  }
+
+  const titles = {
+    all: "All Subjects",
+    mine: "My Subjects",
+    matched: "SWAPP Matches",
+    requests: "Requests",
+    top: "Top Subjects",
+    recent: "Recently Added",
+  };
+
+  sectionTitle.textContent = titles[currentFilter] || "Subjects";
+  if (sectionSubtitle) {
+    sectionSubtitle.textContent =
+      "Browse shared subjects and study resources in a Reddit-style feed.";
+  }
+}
+
+function renderSubjectCards() {
   const grid = document.getElementById("notebookGrid");
   if (!grid) return;
   grid.innerHTML = "";
+  grid.className = "subjects-list";
+
+  const sectionTitle = document.getElementById("sectionTitle");
+  if (sectionTitle) {
+    sectionTitle.textContent = "Subjects";
+  }
+  const sectionSubtitle = document.getElementById("sectionSubtitle");
+  if (sectionSubtitle) {
+    sectionSubtitle.textContent =
+      "Browse shared subjects and study resources in a Reddit-style feed.";
+  }
+
+  document.getElementById("backToSubjectsBtn")?.classList.add("hidden");
+
+  const visibleSubjects = getPaginatedItems(subjects);
+  renderPagination(subjects.length);
+
+  visibleSubjects.forEach((subject) => {
+    const card = document.createElement("div");
+    card.className = "subject-card fade-in";
+    card.innerHTML = `
+      <div class="subject-card-inner">
+        <div>
+          <h3 class="subject-title">${subject}</h3>
+          <p class="subject-desc">
+            Explore notebooks shared by users for ${subject}.
+          </p>
+        </div>
+        <button class="subject-cta" data-subject="${subject}">
+          View Swaps
+        </button>
+      </div>
+    `;
+
+    card.querySelector("button")?.addEventListener("click", () => {
+      selectSubject(subject);
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+function renderNotebooks() {
+  const grid = document.getElementById("notebookGrid");
+  if (!grid) return;
 
   const searchQuery =
     document.getElementById("searchInput")?.value?.toLowerCase() || "";
+
+  if (!selectedSubject && currentFilter === "all" && !searchQuery) {
+    renderSubjectCards();
+    return;
+  }
+
+  grid.innerHTML = "";
+  grid.className = "notebooks-grid";
 
   let filtered = [...notebooks];
 
@@ -131,6 +344,15 @@ function renderNotebooks() {
         n.title.toLowerCase().includes(searchQuery) ||
         n.username.toLowerCase().includes(searchQuery),
     );
+  }
+
+  if (selectedSubject) {
+    const subjectFilter = selectedSubject.toLowerCase();
+    filtered = filtered.filter((n) => {
+      const dept = (n.department || "").toLowerCase();
+      const course = (n.course || "").toLowerCase();
+      return dept.includes(subjectFilter) || course.includes(subjectFilter);
+    });
   }
 
   // 📂 FILTERS
@@ -147,6 +369,7 @@ function renderNotebooks() {
 
   if (currentFilter === "requests") {
     grid.innerHTML = renderRequests();
+    renderPagination(0);
     attachRequestListeners();
     return;
   }
@@ -177,12 +400,17 @@ function renderNotebooks() {
 
   if (filtered.length === 0) {
     grid.innerHTML = `<p class="text-sm text-purple-400">No results found.</p>`;
+    renderPagination(0);
     return;
   }
 
-  filtered.forEach((n) => {
+  grid.className = selectedSubject ? "notebooks-grid" : "subjects-list";
+  const visibleNotebooks = getPaginatedItems(filtered);
+  renderPagination(filtered.length);
+
+  visibleNotebooks.forEach((n) => {
     const card = document.createElement("div");
-    card.className = "notebook-card";
+    card.className = "post-card fade-in";
 
     const canSwapp =
       currentUser &&
@@ -200,7 +428,7 @@ function renderNotebooks() {
         s.status === "accepted",
     );
 
-    const maxDescLength = 100;
+    const maxDescLength = 140;
     const displayDesc = n.description
       ? n.description.length > maxDescLength
         ? n.description.slice(0, maxDescLength) + "..."
@@ -208,78 +436,68 @@ function renderNotebooks() {
       : "No description provided";
 
     const wordCount = n.wordCount || Math.floor(Math.random() * 12000) + 2000;
-
-    card.innerHTML = `
-
-<div class="mb-3">
-  <h3 class="text-xl font-extrabold text-gray-900 dark:text-purple-100 leading-tight">
-    ${n.title || "Untitled Notebook"}
-  </h3>
-
-  <p class="text-sm text-purple-500 dark:text-purple-400 mt-1">
-    by @${n.username || "anonymous"}
-  </p>
-
-  <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-3">
-    ${displayDesc}
-  </p>
-</div>
-
-<div class="academic-meta">
-  ${n.department || "General"} • 
-  ${n.courseCode || "COURSE"} • 
-  ${n.examTag || "Reviewer"}
-</div>
-
-<div class="effort-badge">
-  ${
-    wordCount > 15000
-      ? "Deep Dive"
-      : wordCount > 8000
-        ? "Comprehensive"
+    const subjectLabel = n.department || n.course || "General";
+    const courseLabel = n.course || n.department || "General";
+    const trustScore = n.trustScore || 98;
+    const levelTag =
+      n.level ||
+      (wordCount > 15000
+        ? "COMPREHENSIVE"
+        : wordCount > 8000
+        ? "COMPREHENSIVE"
         : wordCount > 4000
-          ? "Standard Notes"
-          : "Quick Review"
-  }
-</div>
+        ? "STANDARD"
+        : "QUICK REVIEW");
 
-<div class="metadata-dashboard">
+    card.className = "notebook-card fade-in";
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <h3 class="card-title">${n.title || "Untitled Notebook"}</h3>
+          <p class="card-username">by @${n.username || "anonymous"}</p>
+          <p class="card-description">${displayDesc}</p>
+        </div>
+      </div>
 
-  <div class="meta-pill">
-    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-    ${(n.wordCount || 12540).toLocaleString()} words
-  </div>
+      <div class="card-subject-row">
+        <span class="card-subject-text">${subjectLabel} &bull; COURSE &bull; Reviewer</span>
+      </div>
 
-  <div class="meta-pill">
-    <i data-lucide="image" class="w-3.5 h-3.5"></i>
-    ${n.imageCount || 18} diagrams
-  </div>
+      <div class="card-badge-row">
+        <span class="card-badge">${levelTag}</span>
+      </div>
 
-  <div class="meta-pill">
-    <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-    ${n.pageCount || 72} pages
-  </div>
+      <div class="metadata-dashboard">
+        <div class="meta-pill">
+          <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+          ${wordCount.toLocaleString()} words
+        </div>
+        <div class="meta-pill">
+          <i data-lucide="image" class="w-3.5 h-3.5"></i>
+          ${n.imageCount || 18} diagrams
+        </div>
+        <div class="meta-pill">
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          ${n.pageCount || 72} pages
+        </div>
+      </div>
 
-  <div class="meta-pill">
-    <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
-    ${n.readTime || 48} min read
-  </div>
+      <div class="meta-bottom-row">
+        <div class="read-time">
+          <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+          ${n.readTime || 48} min read
+        </div>
+        <div class="trust-score">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          ${trustScore}% Trust Score
+        </div>
+      </div>
 
-</div>
-
-<div class="trust-score">
-  <i data-lucide="shield-check" class="w-4 h-4"></i>
-  ${n.trustScore || 98}% Trust Score
-</div>
-
-<div class="card-footer flex justify-between items-center">
-  <span class="text-[10px] text-purple-400 uppercase tracking-wider">
-    Preview • Unlock via SWAP
-  </span>
-
-  <div class="action-container"></div>
-</div>
-`;
+      <div class="card-footer">
+        <span class="footer-text">PREVIEW &bull; UNLOCK VIA SWAP</span>
+        <div class="action-container"></div>
+      </div>
+    `;
 
     const actionContainer = card.querySelector(".action-container");
 
@@ -293,7 +511,7 @@ function renderNotebooks() {
     } else if (hasSwapp) {
       // Already swapped - show access
       const accessBtn = document.createElement("button");
-      accessBtn.textContent = "🔓 Access";
+      accessBtn.innerHTML = '<i data-lucide="unlock" class="w-4 h-4"></i> Access';
       accessBtn.className =
         "text-sm px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition shadow-sm";
       accessBtn.addEventListener("click", () => {
@@ -307,7 +525,7 @@ function renderNotebooks() {
     } else if (canSwapp) {
       // Can initiate swap
       const swapBtn = document.createElement("button");
-      swapBtn.textContent = "⇄ Request Swap";
+      swapBtn.innerHTML = '<i data-lucide="repeat-2" class="w-4 h-4"></i> Request Swap';
       swapBtn.className =
         "text-sm px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition shadow-sm";
       swapBtn.addEventListener("click", async () => {
@@ -324,7 +542,8 @@ function renderNotebooks() {
           console.error(err);
         } finally {
           swapBtn.disabled = false;
-          swapBtn.textContent = "⇄ Request Swap";
+          swapBtn.innerHTML = '<i data-lucide="repeat-2" class="w-4 h-4"></i> Request Swap';
+          lucide.createIcons();
         }
       });
       actionContainer.appendChild(swapBtn);
@@ -354,8 +573,13 @@ async function submitPortfolio() {
   if (!title) return alert("Title required");
 
   try {
-    const res = await fetch(`${API}/portfolios`, {
-      method: "POST",
+    const method = editingNotebookId ? "PUT" : "POST";
+    const url = editingNotebookId
+      ? `${API}/portfolios/${editingNotebookId}`
+      : `${API}/portfolios`;
+
+    const res = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title,
@@ -369,13 +593,15 @@ async function submitPortfolio() {
     const data = await res.json();
 
     if (!data.success) {
-      showToast(data.message || "Failed to create notebook");
+      showToast(data.message || "Failed to save notebook");
       return;
     }
 
-    showToast("Notebook created!");
+    showToast(editingNotebookId ? "Notebook updated!" : "Notebook created!");
     closeAddModal();
+    editingNotebookId = null;
     loadNotebooks();
+    loadSidebar();
   } catch (err) {
     console.error(err);
     showToast("Server error");
@@ -488,13 +714,16 @@ async function loadRecent() {
 // ─── FILTER ─────────────────────────────────────────────
 function filterBy(type) {
   currentFilter = type;
+  selectedSubject = null;
+  resetPagination();
+  document.getElementById("backToSubjectsBtn")?.classList.add("hidden");
 
   const titles = {
-    all: "All Notebooks",
-    mine: "My Notebooks",
+    all: "All Subjects",
+    mine: "My Subjects",
     matched: "SWAPP Matches",
     requests: "Requests",
-    top: "Top Contributors",
+    top: "Top Subjects",
     recent: "Recently Added",
   };
 
@@ -678,15 +907,69 @@ function closeProfilePanel() {
 }
 
 // ─── MODAL ──────────────────────────────────────────────
+function clearPortfolioForm() {
+  const titleInput = document.getElementById("newTitle");
+  const descriptionInput = document.getElementById("newDescription");
+  const deptInput = document.getElementById("newDept");
+  const fileUrlInput = document.getElementById("newFileUrl");
+  const actionBtn = document.getElementById("portfolioActionBtn");
+
+  if (titleInput) titleInput.value = "";
+  if (descriptionInput) descriptionInput.value = "";
+  if (deptInput) deptInput.value = "";
+  if (fileUrlInput) fileUrlInput.value = "";
+  if (actionBtn) actionBtn.textContent = "Publish Notebook";
+}
+
 function openAddModal() {
+  editingNotebookId = null;
+  document.getElementById("modalHeading").textContent = "New Notebook";
+  clearPortfolioForm();
+
+  if (selectedSubject) {
+    const deptInput = document.getElementById("newDept");
+    if (deptInput) {
+      const existingOption = Array.from(deptInput.options).find(
+        (option) =>
+          option.value.toLowerCase() === selectedSubject.toLowerCase() ||
+          option.text.toLowerCase().includes(selectedSubject.toLowerCase()),
+      );
+
+      if (existingOption) {
+        deptInput.value = existingOption.value;
+      } else {
+        const customOption = document.createElement("option");
+        customOption.value = selectedSubject;
+        customOption.text = selectedSubject;
+        deptInput.appendChild(customOption);
+        deptInput.value = selectedSubject;
+      }
+    }
+  }
+
   document.getElementById("addModal").classList.remove("hidden");
   // FIX: Reinitialize icons when modal opens
+  setTimeout(() => lucide.createIcons(), 100);
+}
+
+function openEditNotebookModal(notebook) {
+  editingNotebookId = notebook.id;
+  document.getElementById("modalHeading").textContent = "Edit Notebook";
+  document.getElementById("newTitle").value = notebook.title || "";
+  document.getElementById("newDescription").value = notebook.description || "";
+  document.getElementById("newDept").value = notebook.department || "";
+  document.getElementById("newFileUrl").value = notebook.file_url || "";
+  const actionBtn = document.getElementById("portfolioActionBtn");
+  if (actionBtn) actionBtn.textContent = "Save Changes";
+  document.getElementById("addModal").classList.remove("hidden");
   setTimeout(() => lucide.createIcons(), 100);
 }
 
 function closeAddModal(e) {
   if (!e || e.target.id === "addModal") {
     document.getElementById("addModal").classList.add("hidden");
+    editingNotebookId = null;
+    clearPortfolioForm();
   }
 }
 
